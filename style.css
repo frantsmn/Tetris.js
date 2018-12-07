@@ -1,0 +1,93 @@
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url(fonts/PressStart2P-Regular.ttf);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+h1, h2, h3, h4, p, span {
+    font-family: 'Press Start 2P','Franklin Gothic Medium', Arial, sans-serif;
+    color: white;
+}
+
+body {
+    background-color: #272727;
+    background-image: url(/background.png);
+    background-attachment: fixed;
+    background-size: 5%;
+}
+
+header {
+    text-align: center;
+}
+
+main {
+    margin: 0 auto;
+    padding: 40px;
+    box-sizing: border-box;
+    max-width: 1360px;
+    background: rgba(0, 0, 0, 0.82);
+}
+
+footer {
+    text-align: center;
+}
+
+/* === GAME STYLES === */
+
+.game p {
+    margin: 10px 0;
+}
+
+.game .panel .img-wrap {
+    min-height: 44px;
+}
+
+.block-image {
+    transform: scale(0.8);
+}
+
+/*---*/
+
+.game {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* width: 50%; */
+}
+
+.game .panel {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    text-align: center;
+    margin: 0 2px;
+    width: 150px;
+    padding: 4px;
+    box-sizing: border-box;
+    border: 4px solid #393939;
+}
+
+.game .panel.glass {
+    width: 210px;
+    padding: 1px;
+}
+
+.game .panel .title {
+    text-align: center;
+}
+
+.game .panel .block-stat {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 10px;
+    max-width: 114px;
+}
+
+.game .panel .block-stat img {
+    transform-origin: left;
+}

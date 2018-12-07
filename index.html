@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <script src="js.js" defer></script>
+
+    <title>Tetris.js</title>
+</head>
+
+<body>
+
+    <header>
+        <H1>Tetris</H1>
+        <p>Implementation of «NES Tetris» game using JavaScript</p>
+    </header>
+
+    <main>
+
+        <div class="game">
+            <div class="panel">
+                <p class="title">
+                    stats
+                </p>
+                <div class="block-stat"><img class="block-image" src="/img/blocks/t-block.png"><span id="t-block-stat">0</span></div>
+                <div class="block-stat"><img class="block-image" src="/img/blocks/j-block.png"><span id="j-block-stat">0</span></div>
+                <div class="block-stat"><img class="block-image" src="/img/blocks/z-block.png"><span id="z-block-stat">0</span></div>
+                <div class="block-stat"><img class="block-image" src="/img/blocks/o-block.png"><span id="o-block-stat">0</span></div>
+                <div class="block-stat"><img class="block-image" src="/img/blocks/s-block.png"><span id="s-block-stat">0</span></div>
+                <div class="block-stat"><img class="block-image" src="/img/blocks/l-block.png"><span id="l-block-stat">0</span></div>
+                <div class="block-stat"><img class="block-image" src="/img/blocks/i-block.png"><span id="i-block-stat">0</span></div>
+            </div>
+
+            <div class="panel glass">
+                <canvas width="200" height="400"></canvas>
+            </div>
+
+            <div class="panel">
+                <div>
+                    <p class="title">
+                        top
+                    </p>
+                    <span id="topScoreStat">0</span>
+                </div>
+                <div>
+                    <p class="title">
+                        score
+                    </p>
+                    <span id="scoreStat">0</span>
+                </div>
+                <div>
+                    <p class="title">
+                        next
+                    </p>
+                    <div class="img-wrap"><img id="nextBlock" class="block-image" src="#"></div>
+                </div>
+                <div>
+                    <p class="title">
+                        lines
+                    </p>
+                    <span id="linesStat">0</span>
+                </div>
+                <div>
+                    <p class="title">
+                        level
+                    </p>
+                    <span id="levelStat">0</span>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+    <footer>
+        <p>FM © 2018</p>
+    </footer>
+</body>
+
+</html>
