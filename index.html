@@ -5,8 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- main -->
     <link rel="stylesheet" href="style.css">
-    <script src="js.js" defer></script>
+    <!-- game -->
+    <link rel="stylesheet" href="game/styles/style.css">
+    <script src="game/tetris.js" defer></script>
 
     <title>Tetris.js</title>
 </head>
@@ -21,55 +24,77 @@
     <main>
 
         <div class="game">
-            <div class="panel">
-                <p class="title">
-                    stats
-                </p>
-                <div class="block-stat"><img class="block-image" src="/img/blocks/t-block.png"><span id="t-block-stat">0</span></div>
-                <div class="block-stat"><img class="block-image" src="/img/blocks/j-block.png"><span id="j-block-stat">0</span></div>
-                <div class="block-stat"><img class="block-image" src="/img/blocks/z-block.png"><span id="z-block-stat">0</span></div>
-                <div class="block-stat"><img class="block-image" src="/img/blocks/o-block.png"><span id="o-block-stat">0</span></div>
-                <div class="block-stat"><img class="block-image" src="/img/blocks/s-block.png"><span id="s-block-stat">0</span></div>
-                <div class="block-stat"><img class="block-image" src="/img/blocks/l-block.png"><span id="l-block-stat">0</span></div>
-                <div class="block-stat"><img class="block-image" src="/img/blocks/i-block.png"><span id="i-block-stat">0</span></div>
-            </div>
 
-            <div class="panel glass">
-                <canvas width="200" height="400"></canvas>
-            </div>
+            <section class="head">
+                <div class="window-buttons">
+                    <button id="FullScreenMode">Fullscreen</button>
+                    <button>Sound off/on</button>
+                </div>
+                <div class="game-buttons">
+                    <button>New game</button>
+                    <button>Save game</button>
+                    <button>Load game</button>
+                </div>
+                <div class="user-buttons">
+                    <button>Log in</button>
+                    <button>Register</button>
+                </div>
+            </section>
 
-            <div class="panel">
-                <div>
+            <section class="body">
+
+                <div class="panel stats">
                     <p class="title">
-                        top
+                        stats
                     </p>
-                    <span id="topScoreStat">0</span>
+                    <div><img data-blockName="t-block" class="block-image"><span id="t-block-stat">0</span></div>
+                    <div><img data-blockName="j-block" class="block-image"><span id="j-block-stat">0</span></div>
+                    <div><img data-blockName="z-block" class="block-image"><span id="z-block-stat">0</span></div>
+                    <div><img data-blockName="o-block" class="block-image"><span id="o-block-stat">0</span></div>
+                    <div><img data-blockName="s-block" class="block-image"><span id="s-block-stat">0</span></div>
+                    <div><img data-blockName="l-block" class="block-image"><span id="l-block-stat">0</span></div>
+                    <div><img data-blockName="i-block" class="block-image"><span id="i-block-stat">0</span></div>
                 </div>
-                <div>
-                    <p class="title">
-                        score
-                    </p>
-                    <span id="scoreStat">0</span>
+
+                <div class="panel glass">
+                    <canvas width="200" height="400"></canvas>
                 </div>
-                <div>
-                    <p class="title">
-                        next
-                    </p>
-                    <div class="img-wrap"><img id="nextBlock" class="block-image" src="#"></div>
+
+                <div class="panel info">
+                    <div>
+                        <p class="title">
+                            top
+                        </p>
+                        <span id="topScoreStat">0</span>
+                    </div>
+                    <div>
+                        <p class="title">
+                            score
+                        </p>
+                        <span id="scoreStat">0</span>
+                    </div>
+                    <div>
+                        <p class="title">
+                            next
+                        </p>
+                        <div class="img-wrap"><img id="nextBlock" class="block-image" src="#"></div>
+                    </div>
+                    <div>
+                        <p class="title">
+                            lines
+                        </p>
+                        <span id="linesStat">0</span>
+                    </div>
+                    <div>
+                        <p class="title">
+                            level
+                        </p>
+                        <span id="levelStat">0</span>
+                    </div>
                 </div>
-                <div>
-                    <p class="title">
-                        lines
-                    </p>
-                    <span id="linesStat">0</span>
-                </div>
-                <div>
-                    <p class="title">
-                        level
-                    </p>
-                    <span id="levelStat">0</span>
-                </div>
-            </div>
+
+            </section>
+
 
         </div>
 
@@ -78,5 +103,82 @@
         <p>FM © 2018</p>
     </footer>
 </body>
+
+<script>
+    document.querySelectorAll("button").forEach((element) => {
+        tippy(element);
+    });
+
+    function tippy(element) {
+        let skew;
+        let interval;
+
+        element.addEventListener('mouseover', start);
+        element.addEventListener('mousemove', checkCursor);
+
+        function start() {
+
+            element.style.transition = `.3s ease-out transform`
+            let startDelay = setTimeout(() => {
+                interval = setInterval(() =>
+                    element.style.transform = `perspective(${skew.size}px) rotate3d(${skew.y},${skew.x},0,${skew.gipoten}deg)`
+                    , 30);
+            }, 0);
+            element.addEventListener('mouseout', () => {
+                element.style.transition = `.5s ease-in transform`;
+                element.style.transform = `perspective(0) rotate3d(0,0,0,0deg)`;
+                clearInterval(interval);
+                clearTimeout(startDelay);
+            });
+        }
+
+        function checkCursor(e) {
+            let pos = {
+                x: (e.pageX - this.offsetLeft) - this.offsetWidth / 2,
+                y: (e.pageY - this.offsetTop) - this.offsetHeight / 2
+            }
+
+            skew = {
+                size: this.offsetWidth + this.offsetHeight,
+                x: (pos.x / this.offsetWidth * 10) | 0,
+                y: (-pos.y / this.offsetHeight * 10) | 0,
+                gipoten: (Math.sqrt(pos.x * pos.x + pos.y * pos.y) / 10 / 0.3) | 0
+            }
+        }
+    }
+
+</script>
+
+<script>
+    function toggleFullscreen(elem) {
+        elem = elem || document.documentElement;
+        if (!document.fullscreenElement && !document.mozFullScreenElement &&
+            !document.webkitFullscreenElement && !document.msFullscreenElement) {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    }
+
+    document.getElementById('FullScreenMode').addEventListener('click', function () {
+        toggleFullscreen();
+    });
+</script>
 
 </html>
