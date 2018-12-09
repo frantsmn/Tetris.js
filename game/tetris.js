@@ -219,11 +219,13 @@ class Canvas {
         let interval = setInterval(() => {
             for (let j = 0; j < 100; j++) {
                 let i = j % 2 ? 1 : 0
-                for (i; i < 500; i++) {
+                for (i; i < 50; i++) {
                     context.fillRect(i * 4, j * 4, 4, 4);
                     i++;
+                    // console.log(i);
                 }
             }
+            console.log('n ------------------> ', n);
             if (n >= 6) {
                 clearInterval(interval);
                 return; //callback();
@@ -498,6 +500,7 @@ class Stats {
     }
 
     addLines(n) {
+        //Если 4 линии, то анимируем
         if (n === 4) {
             this.blinkAnimation();
         }
@@ -528,7 +531,7 @@ class Stats {
 
     refresh() {
         this.element.querySelectorAll('img[data-blockName]').forEach((item) => {
-            item.src = `/game/svg/blocks/level_${this.level}/${item.dataset.blockname}.svg`;
+            item.src = `/game/svg/blocks/level_${this.level % 10}/${item.dataset.blockname}.svg`;
         });
         //Подсчет появившихся в стакане блоков
         this.blockStatistics[block.activeBlock.name]++;
@@ -542,7 +545,7 @@ class Stats {
         //Набранные очки
         this.element.querySelector(`#scoreStat`).textContent = this.score;
         //Следующий блок
-        this.element.querySelector('img#nextBlock').src = `/game/svg/blocks/level_${this.level}/${block.nextBlock.name}.svg`;
+        this.element.querySelector('img#nextBlock').src = `/game/svg/blocks/level_${this.level % 10}/${block.nextBlock.name}.svg`;
         //Стертые линии
         this.element.querySelector(`#linesStat`).textContent = this.lines;
         //Текущий уровень
@@ -660,6 +663,39 @@ class Control {
     }
 }
 
+class Ticker {
+    constructor() {
+        this.actualLevel = 0;
+        this.delay = [800, 717, 633, 550, 467, 383, 300, 217, 133, 100, 83, 83, 83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 17];
+        this.setInterval = null;
+
+        emitter.subscribe('stats:newLevel', (level) => {
+            this.actualLevel = level;
+            this.stop();
+            this.start(this.actualLevel);
+        });
+
+        this.start = (level = this.actualLevel) => {
+            // console.log('...>', level);
+            this.setInterval = setInterval(() => {
+                block.activeBlock.moveDown();
+            }, this.delay[level]);
+        }
+
+        this.stop = () => {
+            clearInterval(this.setInterval);
+        }
+
+        emitter.subscribe('block:gameOver', this.stop);
+        emitter.subscribe('canvas:wipeAnimationStart', this.stop);
+        emitter.subscribe('canvas:wipeAnimationEnd', this.start);
+    }
+
+
+
+
+}
+
 class EventEmitter {
     constructor() {
         this.events = {};
@@ -697,12 +733,13 @@ class EventEmitter {
 
 let emitter = new EventEmitter();
 let canvas = new Canvas(document.getElementsByTagName('canvas')[0]);
-let matrix = new Matrix('[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,{"state":"fixed","color":1},null,null,null],[null,null,null,{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},null,null,null],[{"state":"fixed","color":1},null,{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},null,{"state":"fixed","color":3},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},null],[{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},null]]');
-// let matrix = new Matrix();
+//let matrix = new Matrix('[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,{"state":"fixed","color":1},null,null,null],[null,null,null,{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},null,null,null],[{"state":"fixed","color":1},null,{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},null,{"state":"fixed","color":3},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},null],[{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},null]]');
+let matrix = new Matrix();
 let block = new Block();
 let stats = new Stats(document.getElementsByClassName('game')[0]);
 let control = new Control();
 let textures = new Textures();
+let ticker = new Ticker();
 
 /* ??? */
 setTimeout(() => {
@@ -711,7 +748,6 @@ setTimeout(() => {
 }, 500);
 
 /* ??? */
-
 
 // function Game() {
 //     this.saveGame = function () {
