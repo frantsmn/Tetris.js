@@ -6,10 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- main -->
+    <link rel="stylesheet" href="font.css">
     <link rel="stylesheet" href="style.css">
     <!-- game -->
-    <link rel="stylesheet" href="game/styles/style.css">
+    <link rel="stylesheet" href="game/styles/game.css">
     <script src="game/tetris.js" defer></script>
+    <!-- plugs -->
+    <link rel="stylesheet" href="neon-buttons/style.css">
+    <script src="neon-buttons/neon-buttons.js" defer></script>
 
     <title>Tetris.js</title>
 </head>
@@ -21,149 +25,154 @@
         <p>Implementation of «NES Tetris» game using JavaScript</p>
     </header>
 
-    <main>
+    <main class="competitive">
+        <!-- <main class="competitive"> -->
 
-        <div class="game">
+        <section class="head">
+            <div class="window-buttons">
+                <button id="FullScreenMode">Fullscreen</button>
+                <button>Sound off/on</button>
+            </div>
+            <div class="user-buttons">
+                <button>Log in</button>
+                <button>Register</button>
+            </div>
+        </section>
 
-            <section class="head">
-                <div class="window-buttons">
-                    <button id="FullScreenMode">Fullscreen</button>
-                    <button>Sound off/on</button>
-                </div>
+        <section class="game">
+
+            <div class="panel stats">
+                <p class="title">
+                    stats
+                </p>
+                <div><img data-blockName="t-block" class="block-image"><span id="t-block-stat">0</span></div>
+                <div><img data-blockName="j-block" class="block-image"><span id="j-block-stat">0</span></div>
+                <div><img data-blockName="z-block" class="block-image"><span id="z-block-stat">0</span></div>
+                <div><img data-blockName="o-block" class="block-image"><span id="o-block-stat">0</span></div>
+                <div><img data-blockName="s-block" class="block-image"><span id="s-block-stat">0</span></div>
+                <div><img data-blockName="l-block" class="block-image"><span id="l-block-stat">0</span></div>
+                <div><img data-blockName="i-block" class="block-image"><span id="i-block-stat">0</span></div>
+            </div>
+
+            <div class="panel glass">
+
+                <canvas width="200" height="400"></canvas>
                 <div class="game-buttons">
                     <button>New game</button>
                     <button>Save game</button>
                     <button>Load game</button>
                 </div>
-                <div class="user-buttons">
-                    <button>Log in</button>
-                    <button>Register</button>
-                </div>
-            </section>
 
-            <section class="body">
+            </div>
 
-                <div class="panel stats">
+            <div class="panel info">
+                <div>
                     <p class="title">
-                        stats
+                        top
                     </p>
-                    <div><img data-blockName="t-block" class="block-image"><span id="t-block-stat">0</span></div>
-                    <div><img data-blockName="j-block" class="block-image"><span id="j-block-stat">0</span></div>
-                    <div><img data-blockName="z-block" class="block-image"><span id="z-block-stat">0</span></div>
-                    <div><img data-blockName="o-block" class="block-image"><span id="o-block-stat">0</span></div>
-                    <div><img data-blockName="s-block" class="block-image"><span id="s-block-stat">0</span></div>
-                    <div><img data-blockName="l-block" class="block-image"><span id="l-block-stat">0</span></div>
-                    <div><img data-blockName="i-block" class="block-image"><span id="i-block-stat">0</span></div>
+                    <span id="topScoreStat">0</span>
                 </div>
-
-                <div class="panel glass">
-                    <canvas width="200" height="400"></canvas>
+                <div>
+                    <p class="title">
+                        score
+                    </p>
+                    <span id="scoreStat">0</span>
                 </div>
-
-                <div class="panel info">
-                    <div>
-                        <p class="title">
-                            top
-                        </p>
-                        <span id="topScoreStat">0</span>
-                    </div>
-                    <div>
-                        <p class="title">
-                            score
-                        </p>
-                        <span id="scoreStat">0</span>
-                    </div>
-                    <div>
-                        <p class="title">
-                            next
-                        </p>
-                        <div class="img-wrap"><img id="nextBlock" class="block-image" src="#"></div>
-                    </div>
-                    <div>
-                        <p class="title">
-                            lines
-                        </p>
-                        <span id="linesStat">0</span>
-                    </div>
-                    <div>
-                        <p class="title">
-                            level
-                        </p>
-                        <span id="levelStat">0</span>
-                    </div>
+                <div>
+                    <p class="title">
+                        next
+                    </p>
+                    <div class="img-wrap"><img id="nextBlock" class="block-image" src="#"></div>
                 </div>
-
-            </section>
-
-            <section class="records">
-                <div class="panel">
-                    <p class="title">highscores</p>
-                <div class="grid-container">
-                    <div>Player1</div><div>0</div>
-                    <div>Player2</div><div>0</div>
-                    <div>Player3</div><div>0</div>
-                    <div>Player4</div><div>0</div>
-                    <div>Player5</div><div>0</div>
-                    <div>Player6</div><div>0</div>
-                    <div>Player7</div><div>0</div>
-                    <div>Player8</div><div>0</div>
-                    <div>Player9</div><div>0</div>
+                <div>
+                    <p class="title">
+                        lines
+                    </p>
+                    <span id="linesStat">0</span>
+                </div>
+                <div>
+                    <p class="title">
+                        level
+                    </p>
+                    <span id="levelStat">0</span>
                 </div>
             </div>
-            </section>
 
-        </div>
+        </section>
+
+        <section class="opponent">
+            <div class="panel glass">
+                <div class="opponent-buttons">
+                    <button>Invite opponent</button>
+                </div>
+                <canvas width="200" height="400"></canvas>
+            </div>
+            <div class="panel info">
+                <div>
+                    <p class="title">
+                        top
+                    </p>
+                    <span id="topScoreStat">0</span>
+                </div>
+                <div>
+                    <p class="title">
+                        score
+                    </p>
+                    <span id="scoreStat">0</span>
+                </div>
+                <div>
+                    <p class="title">
+                        next
+                    </p>
+                    <div class="img-wrap"><img id="nextBlock" class="block-image" src="#"></div>
+                </div>
+                <div>
+                    <p class="title">
+                        lines
+                    </p>
+                    <span id="linesStat">0</span>
+                </div>
+                <div>
+                    <p class="title">
+                        level
+                    </p>
+                    <span id="levelStat">0</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="records">
+            <div class="panel">
+                <p class="title">highscores</p>
+                <div class="grid-container">
+                    <div>Player1</div>
+                    <div>999999</div>
+                    <div>Player2</div>
+                    <div>0</div>
+                    <div>Player3</div>
+                    <div>0</div>
+                    <div>Player4</div>
+                    <div>0</div>
+                    <div>Player5</div>
+                    <div>0</div>
+                    <div>Player6</div>
+                    <div>0</div>
+                    <div>Player7</div>
+                    <div>0</div>
+                    <div>Player8</div>
+                    <div>0</div>
+                    <div>Player9</div>
+                    <div>0</div>
+                </div>
+            </div>
+        </section>
+
 
     </main>
     <footer>
         <p>FM © 2018</p>
     </footer>
 </body>
-
-<script>
-    document.querySelectorAll("button").forEach((element) => {
-        tippy(element);
-    });
-
-    function tippy(element) {
-        let skew;
-        let interval;
-
-        element.addEventListener('mouseover', start);
-        element.addEventListener('mousemove', checkCursor);
-
-        function start() {
-
-            element.style.transition = `.3s ease-out transform`
-            let startDelay = setTimeout(() => {
-                interval = setInterval(() =>
-                    element.style.transform = `perspective(${skew.size}px) rotate3d(${skew.y},${skew.x},0,${skew.gipoten}deg)`
-                    , 30);
-            }, 0);
-            element.addEventListener('mouseout', () => {
-                element.style.transition = `.5s ease-in transform`;
-                element.style.transform = `perspective(0) rotate3d(0,0,0,0deg)`;
-                clearInterval(interval);
-                clearTimeout(startDelay);
-            });
-        }
-
-        function checkCursor(e) {
-            let pos = {
-                x: (e.pageX - this.offsetLeft) - this.offsetWidth / 2,
-                y: (e.pageY - this.offsetTop) - this.offsetHeight / 2
-            }
-
-            skew = {
-                size: this.offsetWidth + this.offsetHeight,
-                x: (pos.x / this.offsetWidth * 10) | 0,
-                y: (-pos.y / this.offsetHeight * 10) | 0,
-                gipoten: (Math.sqrt(pos.x * pos.x + pos.y * pos.y) / 10 / 0.3) | 0
-            }
-        }
-    }
-
-</script>
 
 <script>
     function toggleFullscreen(elem) {

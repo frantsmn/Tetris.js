@@ -531,7 +531,7 @@ class Stats {
 
     refresh() {
         this.element.querySelectorAll('img[data-blockName]').forEach((item) => {
-            item.src = `/game/svg/blocks/level_${this.level % 10}/${item.dataset.blockname}.svg`;
+            item.src = `./game/svg/blocks/level_${this.level % 10}/${item.dataset.blockname}.svg`;
         });
         //Подсчет появившихся в стакане блоков
         this.blockStatistics[block.activeBlock.name]++;
@@ -545,7 +545,7 @@ class Stats {
         //Набранные очки
         this.element.querySelector(`#scoreStat`).textContent = this.score;
         //Следующий блок
-        this.element.querySelector('img#nextBlock').src = `/game/svg/blocks/level_${this.level % 10}/${block.nextBlock.name}.svg`;
+        this.element.querySelector('img#nextBlock').src = `./game/svg/blocks/level_${this.level % 10}/${block.nextBlock.name}.svg`;
         //Стертые линии
         this.element.querySelector(`#linesStat`).textContent = this.lines;
         //Текущий уровень

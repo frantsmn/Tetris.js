@@ -1,0 +1,87 @@
+@keyframes turning_on {
+    0% {
+        color: rgba(0, 255, 255, 0.5);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0);
+        box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0);
+    }
+    10% {
+        color: rgba(0, 255, 255, 0.8);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.25);
+        box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0.01);
+    }
+    30% {
+        color: rgba(0, 255, 255, 0.7);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0);
+        box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0);
+    }
+    50% {
+        color: rgba(136, 255, 255, 0.9);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0.02);
+    }
+    80% {
+        color: rgba(0, 255, 255, 0.7);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+        box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0);
+    }
+    100% {
+        color: rgba(0, 255, 255, 0.95);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 1);
+        box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0.03);
+    }
+}
+
+@keyframes blinking {
+    0% {
+        color: rgba(0, 255, 255, 0.7);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0);
+        box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0);
+    }
+    2% {
+        color: rgba(0, 255, 255, 0.9);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.9);
+        box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0.1);
+    }
+    18% {
+        color: rgba(0, 255, 255, 0.8);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0);
+        box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0);
+    }
+    25% {
+        color: rgba(0, 255, 255, 0.9);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 1);
+        box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0.05);
+    }
+}
+
+button::before{
+    content: '';
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABlBMVEUAAAAAAAClZ7nPAAAAAnRSTlMAM8lDrC4AAAAWSURBVBjTY2BEAwyMDAwomBiB4WMGAEGgAHEPA6weAAAAAElFTkSuQmCC);
+    background-size: 10px;
+    }
+
+button {
+    position: relative;
+    font-family: 'Press Start 2P', 'Franklin Gothic Medium', Arial, sans-serif;
+    color: rgba(0, 255, 255, 0.5);
+    background: black;
+    border: 2px #393939 solid;
+    padding: 20px 15px;
+    margin: 3px;
+    cursor: pointer;
+}
+
+button:hover, button:focus {
+    outline: 0;
+    color: rgba(0, 255, 255, 1);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 1);
+    box-shadow: 0 0 30px 0px rgba(0, 255, 255, 0.05);
+    background: #141414;
+    animation: turning_on .2s steps(6, end), blinking 0.012s steps(3, end) .35s infinite;
+}
