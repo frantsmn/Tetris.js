@@ -21,7 +21,7 @@
 <body>
 
     <header>
-        <H1>Tetris</H1>
+        <H1>Tetris.js</H1>
         <p>Implementation of «NES Tetris» game using JavaScript</p>
     </header>
 
@@ -30,12 +30,12 @@
 
         <section class="head">
             <div class="window-buttons">
-                <button id="FullScreenMode">Fullscreen</button>
-                <button>Sound off/on</button>
+                <button class="neon" id="FullScreenMode">Fullscreen</button>
+                <button class="neon">Sound off/on</button>
             </div>
             <div class="user-buttons">
-                <button>Log in</button>
-                <button>Register</button>
+                <button class="neon">Log in</button>
+                <button class="neon">Register</button>
             </div>
         </section>
 
@@ -58,15 +58,15 @@
 
                 <canvas width="200" height="400"></canvas>
                 <div class="game-buttons">
-                    <button>New game</button>
-                    <button>Save game</button>
-                    <button>Load game</button>
+                    <button class="neon">New game</button>
+                    <button class="neon">Save game</button>
+                    <button class="neon">Load game</button>
                 </div>
 
             </div>
 
             <div class="panel info">
-                <div>
+                <div class="top-score">
                     <p class="title">
                         top
                     </p>
@@ -102,13 +102,13 @@
 
         <section class="opponent">
             <div class="panel glass">
+                <canvas width="200" height="400"></canvas>
                 <div class="opponent-buttons">
                     <button>Invite opponent</button>
                 </div>
-                <canvas width="200" height="400"></canvas>
             </div>
             <div class="panel info">
-                <div>
+                <div class="top-score">
                     <p class="title">
                         top
                     </p>
@@ -164,6 +164,20 @@
                     <div>Player9</div>
                     <div>0</div>
                 </div>
+            </div>
+        </section>
+
+        <section class="controller">
+            <div class="cross">
+                <div class="sides">
+                    <button class="left"></button>
+                    <button class="right"></button>
+                </div>
+                <button class="down"></button>
+            </div>
+            <div class="buttons">
+                <button class="button-b"></button>
+                <button class="button-a"></button>
             </div>
         </section>
 

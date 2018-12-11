@@ -6,6 +6,10 @@ div {
     min-height: 44px;
 }
 
+.panel .img-wrap img[src="#"] {
+    visibility: hidden;
+}
+
 /* === MAIN === */
 
 main {
@@ -14,8 +18,6 @@ main {
     box-sizing: border-box;
     max-width: 1300px;
     background: rgba(0, 0, 0, 0.8);
-
-
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -23,19 +25,23 @@ main {
 
 /* === MAIN === (competitive mode) */
 
-main.competitive{
+main.competitive {
     justify-content: center;
 }
 
-main.competitive .opponent{
+main.competitive .opponent {
     display: flex;
 }
 
-main.competitive .panel.stats{
+main.competitive .panel.stats {
     display: none;
 }
 
-main .records{
+main.competitive .panel.info .top-score {
+    display: none;
+}
+
+main .records {
     display: none;
 }
 
@@ -147,7 +153,7 @@ main .records{
     padding: 1px;
 }
 
-.panel.glass .game-buttons{
+.panel.glass .game-buttons {
     position: absolute;
     top: 0;
     left: 0;
@@ -158,9 +164,10 @@ main .records{
     justify-content: center;
 }
 
-.panel.glass .game-buttons button{
+.panel.glass .game-buttons button {
     /* flex-basis: 0; */
     flex-shrink: 0;
+    height: 18%;
 }
 
 /* GAME => Info */
@@ -175,12 +182,23 @@ main .records{
     align-items: center;
 }
 
-/* OPPONENT */
+/* === OPPONENT === */
 
 .opponent {
     display: none;
     flex-wrap: wrap;
     padding: 10px;
+}
+
+.panel.glass .opponent-buttons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
 }
 
 /* === RECORDS === */
@@ -207,6 +225,68 @@ main .records{
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
+}
+
+/* === CONTROLLER === */
+
+.controller {
+    outline: 0;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: transparent;
+    high
+}
+
+.controller {
+    position: fixed;
+    bottom: 5%;
+    width: 100vw;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.controller .cross {
+    height: 130px;
+    width: 150px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.controller .cross .sides {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.controller .cross .left, .controller .cross .right, .controller .cross .down {
+    width: 65px;
+    height: 65px;
+    border-radius: 10%;
+    border: solid 3px rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.controller .cross .down {
+    width: 50px;
+    height: 50px;
+}
+
+.controller .buttons {
+    height: 130px;
+    width: 160px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.controller .buttons .button-b, .controller .buttons .button-a {
+    height: 70px;
+    width: 70px;
+    background-color: rgba(255, 0, 0, 0.15);
+    border: solid 3px rgba(255, 0, 0, 0.1);
+    border-radius: 50%;
 }
 
 * {

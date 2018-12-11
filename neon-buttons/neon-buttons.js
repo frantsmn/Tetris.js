@@ -1,6 +1,6 @@
 'use strict';
 
-document.querySelectorAll("button").forEach((element) => {
+document.querySelectorAll(".neon").forEach((element) => {
     neon(element);
 });
 
@@ -9,19 +9,14 @@ function neon(element) {
     let interval;
     let rect = element.getBoundingClientRect();
 
-    // var x = document.getElementById("myAudio");
     var x = new Audio('/neon-buttons/btn.wav');
     x.volume = 0.1;
-
-    function playAudio() {
-        x.play();
-    }
 
     element.addEventListener('mouseover', start);
     element.addEventListener('mousemove', checkCursor);
 
     function start() {
-        playAudio();
+        x.play();
 
         element.style.transition = `.3s ease-out transform`
         let startDelay = setTimeout(() => {
@@ -29,7 +24,8 @@ function neon(element) {
         }, 0);
         element.addEventListener('mouseout', () => {
             element.style.transition = `.5s ease-in transform`;
-            element.style.transform = `perspective(0) rotate3d(0,0,0,0deg)`;
+            element.style.transform = `perspective(0) rotate3d(0,0,0,0)`;
+            element.blur();
             clearInterval(interval);
             clearTimeout(startDelay);
         });
@@ -37,17 +33,15 @@ function neon(element) {
 
     function checkCursor(e) {
         let pos = {
-            x: (e.clientX - rect.left) - element.offsetWidth / 2,
-            y: (e.clientY - rect.top) - element.offsetHeight / 2
+            x: -element.offsetWidth / 2 + e.offsetX,
+            y: -element.offsetHeight / 2 + e.offsetY
         }
 
-        console.log(rect.left);
-
         skew = {
-            size: this.offsetWidth + this.offsetHeight,
+            size: this.offsetWidth + this.offsetHeight / 2,
             x: (pos.x / this.offsetWidth * 10) | 0,
             y: (-pos.y / this.offsetHeight * 10) | 0,
-            gipoten: (Math.sqrt(pos.x * pos.x + pos.y * pos.y) / 3.5) | 0
+            gipoten: (Math.sqrt(pos.x * pos.x + pos.y * pos.y) / 4) | 0
         }
     }
 }
