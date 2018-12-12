@@ -147,8 +147,9 @@ class Textures {
 
 class Canvas {
     constructor(element) {
-        const aspectRatio = 2;    // height:width = 2:1
-        element.height = element.width * aspectRatio;
+
+        const aspectRatio = 2; // height:width = 2:1
+        element.style.height = getComputedStyle(element).width * aspectRatio;
         this.context = element.getContext('2d');
     }
 

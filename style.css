@@ -4,11 +4,6 @@ html, body {
     user-select: none;
 }
 
-h1, h2, h3, h4, p, span {
-    font-family: 'Press Start 2P','Franklin Gothic Medium', Arial, sans-serif;
-    color: white;
-}
-
 body {
     background-color: #272727;
     background-image: url(./background.png);
