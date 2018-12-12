@@ -1,7 +1,3 @@
-div {
-    box-sizing: border-box;
-}
-
 .panel .img-wrap {
     min-height: 44px;
 }
@@ -14,23 +10,19 @@ div {
 
 main {
     margin: 40px auto;
-    padding: 20px;
-    box-sizing: border-box;
+    padding: 10px;
     max-width: 1300px;
+    box-sizing: border-box;
     background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }
 
 /* === MAIN === (competitive mode) */
-
-main.competitive {
-    justify-content: center;
-}
-
+main.competitive .player,
 main.competitive .opponent {
-    display: flex;
+    justify-content: center;
 }
 
 main.competitive .panel.stats {
@@ -48,7 +40,11 @@ main .records {
 /* === HEAD === */
 
 .head {
-    flex-basis: 100%;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 1;
+
     padding: 10px;
     display: flex;
     justify-content: space-between;
@@ -61,8 +57,7 @@ main .records {
     align-items: flex-start;
 }
 
-.head .game-buttons {
-    flex-basis: 40%;
+.head .player-overlay {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -76,23 +71,25 @@ main .records {
     align-items: flex-start;
 }
 
-/* === GAME === */
+/* === PLAYER === */
 
-.game {
+.player {
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 2;
+    grid-row-end: 2;
+
     display: flex;
-    flex-wrap: wrap;
-    padding: 10px;
+    box-sizing: border-box;
 }
 
 /* Panel */
 
 .panel {
-    width: 170px;
-    height: 410px;
     margin: 0 2px;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: space-between;
+    justify-content: space-evenly;
     text-align: center;
     padding: 4px;
     border: 4px solid #393939;
@@ -123,16 +120,18 @@ main .records {
         filter: brightness(1.5);
         box-shadow: 0 0 0 4px rgba(0, 0, 0, .35);
     }
+
     100% {
         border: 4px solid #393939;
     }
 }
 
-.game.blink-animation .panel {
+.player.blink-animation .panel {
     animation: blink-animation .0142s steps(2, end) infinite;
 }
 
-/* GAME => Stats */
+
+/* PLAYER => Stats */
 
 .panel.stats div {
     display: flex;
@@ -145,15 +144,18 @@ main .records {
     margin-bottom: 10px;
 }
 
-/* GAME => Glass */
+/* PLAYER => Glass */
 
 .panel.glass {
     position: relative;
-    width: 210px;
+    /* width: 100%; */
+    /* height: 100%; */
+    max-width: 200px;
+    /* max-height: 550; */
     padding: 1px;
 }
 
-.panel.glass .game-buttons {
+.panel.glass .player-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -164,13 +166,13 @@ main .records {
     justify-content: center;
 }
 
-.panel.glass .game-buttons button {
+.panel.glass .player-overlay button {
     /* flex-basis: 0; */
     flex-shrink: 0;
     height: 18%;
 }
 
-/* GAME => Info */
+/* PLAYER => Info */
 
 .panel.info div:last-child {
     margin-bottom: 5px;
@@ -185,26 +187,22 @@ main .records {
 /* === OPPONENT === */
 
 .opponent {
-    display: none;
-    flex-wrap: wrap;
-    padding: 10px;
-}
+    grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 2;
 
-.panel.glass .opponent-buttons {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
+    box-sizing: border-box;
 }
 
 /* === RECORDS === */
 
 .records {
-    padding: 10px;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 3;
+    grid-row-end: 3;
 }
 
 .records .panel {
@@ -233,11 +231,10 @@ main .records {
     outline: 0;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: transparent;
-    high
-}
-
-.controller {
     position: fixed;
+    box-sizing: border-box;
+    padding-left: 10px;
+    padding-right: 10px;
     bottom: 5%;
     width: 100vw;
     display: flex;
@@ -260,10 +257,15 @@ main .records {
     justify-content: space-between;
 }
 
-.controller .cross .left, .controller .cross .right, .controller .cross .down {
+.controller .cross .left,
+.controller .cross .right,
+.controller .cross .down {
     width: 65px;
     height: 65px;
     border-radius: 10%;
+    font-size: 25px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.25);
     border: solid 3px rgba(255, 255, 255, 0.15);
     background: rgba(255, 255, 255, 0.1);
 }
@@ -281,9 +283,13 @@ main .records {
     justify-content: space-between;
 }
 
-.controller .buttons .button-b, .controller .buttons .button-a {
+.controller .buttons .button-b,
+.controller .buttons .button-a {
     height: 70px;
     width: 70px;
+    font-size: 25px;
+    font-weight: bold;
+    color: rgba(255, 0, 0, 0.25);
     background-color: rgba(255, 0, 0, 0.15);
     border: solid 3px rgba(255, 0, 0, 0.1);
     border-radius: 50%;

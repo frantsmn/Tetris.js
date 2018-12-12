@@ -25,10 +25,10 @@
         <p>Implementation of «NES Tetris» game using JavaScript</p>
     </header>
 
-    <main class="competitive">
+    <main class="game competitive">
         <!-- <main class="competitive"> -->
 
-        <section class="head">
+        <section class="head" style="display: none;">
             <div class="window-buttons">
                 <button class="neon" id="FullScreenMode">Fullscreen</button>
                 <button class="neon">Sound off/on</button>
@@ -39,8 +39,7 @@
             </div>
         </section>
 
-        <section class="game">
-
+        <section class="player">
             <div class="panel stats">
                 <p class="title">
                     stats
@@ -57,10 +56,11 @@
             <div class="panel glass">
 
                 <canvas width="200" height="400"></canvas>
-                <div class="game-buttons">
-                    <button class="neon">New game</button>
+                <div class="player-overlay">
+                    <p class="title">PAUSE</p>
+                    <button class="neon">Start new</button>
+                    <button class="neon">Continiue</button>
                     <button class="neon">Save game</button>
-                    <button class="neon">Load game</button>
                 </div>
 
             </div>
@@ -97,13 +97,12 @@
                     <span id="levelStat">0</span>
                 </div>
             </div>
-
         </section>
 
         <section class="opponent">
             <div class="panel glass">
                 <canvas width="200" height="400"></canvas>
-                <div class="opponent-buttons">
+                <div class="opponent-overlay" style="display: none">
                     <button>Invite opponent</button>
                 </div>
             </div>
@@ -167,25 +166,26 @@
             </div>
         </section>
 
-        <section class="controller">
-            <div class="cross">
-                <div class="sides">
-                    <button class="left"></button>
-                    <button class="right"></button>
-                </div>
-                <button class="down"></button>
-            </div>
-            <div class="buttons">
-                <button class="button-b"></button>
-                <button class="button-a"></button>
-            </div>
-        </section>
-
-
     </main>
+
+    <section class="controller">
+        <div class="cross">
+            <div class="sides">
+                <button class="left">◄</button>
+                <button class="right">►</button>
+            </div>
+            <button class="down">▼</button>
+        </div>
+        <div class="buttons">
+            <button class="button-b">B</button>
+            <button class="button-a">A</button>
+        </div>
+    </section>
+
     <footer>
         <p>FM © 2018</p>
     </footer>
+
 </body>
 
 <script>
