@@ -40,6 +40,7 @@ canvas {
     .panel.stats {
         display: none;
     }
+
     .panel {
         margin: 0;
         max-width: 150px;
@@ -47,11 +48,27 @@ canvas {
         max-height: 500px;
         height: calc(30vw * 2);
     }
+
     .panel.glass {
         max-width: 250px;
         width: 30vw;
         max-height: 500px;
         height: calc(30vw * 2);
+    }
+
+    .game:not(.competitive) .panel {
+        margin: 0;
+        max-width: 150px;
+        width: calc(100vw - 150px);
+        max-height: 500px;
+        height: calc((100vw - 150px) * 2);
+    }
+
+    .game:not(.competitive) .panel.glass {
+        max-width: 250px;
+        width: calc(100vw - 150px);
+        max-height: 500px;
+        height: calc((100vw - 150px) * 2);
     }
 }
 
@@ -65,20 +82,24 @@ canvas {
         flex-flow: row;
         /* justify-content:flex-end !important; */
     }
+
     .player {
         flex-direction: row-reverse !important;
     }
+
     .panel.stats {
         display: none;
     }
+
     .panel {
-        min-width: calc(90vh / 3);
-        width: calc(90vh / 3);
-        height: 90vh;
+        min-width: calc(95vh / 3);
+        width: calc(95vh / 3);
+        height: 95vh;
     }
+
     .panel.glass {
-        width: calc(90vh / 2);
-        height: 90vh;
+        width: calc(95vh / 2);
+        height: 95vh;
     }
 }
 
@@ -117,6 +138,7 @@ canvas {
         filter: brightness(1.5);
         box-shadow: 0 0 0 4px rgba(0, 0, 0, .35);
     }
+
     100% {
         border: 4px solid #393939;
     }
@@ -196,7 +218,8 @@ main.competitive .opponent {
     justify-content: center;
 }
 
-.player, .opponent {
+.player,
+.opponent {
     box-sizing: border-box;
     flex-grow: 0;
     display: flex;
@@ -264,7 +287,7 @@ main.competitive .opponent {
 
 /* === CONTROLLER === */
 
-.controller {
+#controller {
     pointer-events: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: transparent;
@@ -279,7 +302,7 @@ main.competitive .opponent {
     justify-content: space-between;
 }
 
-.controller .cross {
+#controller .cross {
     pointer-events: all;
     height: 130px;
     width: 150px;
@@ -289,13 +312,15 @@ main.competitive .opponent {
     align-items: center;
 }
 
-.controller .cross .sides {
+#controller .cross .sides {
     width: 100%;
     display: flex;
     justify-content: space-between;
 }
 
-.controller .cross .left, .controller .cross .right, .controller .cross .down {
+#controller .cross #button-left,
+#controller .cross #button-right,
+#controller .cross #button-down {
     width: 65px;
     height: 65px;
     border-radius: 10%;
@@ -307,12 +332,12 @@ main.competitive .opponent {
     outline: 0;
 }
 
-.controller .cross .down {
+#controller .cross #button-down {
     width: 50px;
     height: 50px;
 }
 
-.controller .buttons {
+#controller .buttons {
     pointer-events: all;
     height: 130px;
     width: 160px;
@@ -321,7 +346,8 @@ main.competitive .opponent {
     justify-content: space-between;
 }
 
-.controller .buttons .button-b, .controller .buttons .button-a {
+#controller .buttons #button-b,
+#controller .buttons #button-a {
     height: 70px;
     width: 70px;
     font-size: 25px;

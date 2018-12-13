@@ -15,9 +15,13 @@ class Matrix {
         this.matrix = json ? JSON.parse(json) : this.setEmptyMatrix();
     }
 
-    setMatrix(array) { this.matrix = array; }
+    setMatrix(array) {
+        this.matrix = array;
+    }
 
-    getMatrix() { return this.matrix }
+    getMatrix() {
+        return this.matrix
+    }
 
     getFixedMatrix() {
         let m = [];
@@ -32,7 +36,9 @@ class Matrix {
         return m;
     }
 
-    getMatrixJSON() { return JSON.stringify(this.matrix) }
+    getMatrixJSON() {
+        return JSON.stringify(this.matrix)
+    }
 
     getFixedMatrixJSON() {
         let m = [];
@@ -47,9 +53,13 @@ class Matrix {
         return JSON.stringify(m);
     }
 
-    setMatrixJSON(json) { this.matrix = JSON.parse(json); }
+    setMatrixJSON(json) {
+        this.matrix = JSON.parse(json);
+    }
 
-    clearMatrix() { this.matrix = this.setEmptyMatrix(); }
+    clearMatrix() {
+        this.matrix = this.setEmptyMatrix();
+    }
 
     checkPointsIsEmpty(x, y, points) {
         for (let i = 0; i < points.length; i++) {
@@ -76,7 +86,10 @@ class Matrix {
         for (let i = 0; i < points.length; i++) {
             //Если не выше верхней границы стакана
             if (y + points[i].y >= 0) {
-                this.matrix[y + points[i].y][x + points[i].x] = { state: 'active', color: color };
+                this.matrix[y + points[i].y][x + points[i].x] = {
+                    state: 'active',
+                    color: color
+                };
             }
         }
     }
@@ -103,8 +116,8 @@ class Matrix {
         let fullLines = [];
         this.matrix.forEach((line, i) => {
             if (line.every((point) => {
-                return point && point.state === 'fixed';
-            })) {
+                    return point && point.state === 'fixed';
+                })) {
                 fullLines.push(i);
             }
         });
@@ -163,8 +176,7 @@ class Canvas {
                     // context.fillRect(x * 20, y * 20, 20, 20);
                     //Texture
                     context.drawImage(textures[cell.color], x * 20, y * 20, 20, 20);
-                }
-                else {
+                } else {
                     context.clearRect(x * 20, y * 20, 20, 20);
                 }
             });
@@ -352,10 +364,35 @@ class Block {
                 state: 1,
             }
             this.pointsSet = [
-                [{ x: -2, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 0 }, { x: 1, y: 0 }],
-                [{ x: 0, y: -2 }, { x: 0, y: -1 }, { x: 0, y: 0 }, { x: 0, y: 1 }]
+                [{
+                    x: -2,
+                    y: 0
+                }, {
+                    x: -1,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: 0
+                }],
+                [{
+                    x: 0,
+                    y: -2
+                }, {
+                    x: 0,
+                    y: -1
+                }, {
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: 1
+                }]
             ];
         }
+
         function J_block() {
             BlockMovements.call(this);
             this.name = 'j-block';
@@ -369,12 +406,61 @@ class Block {
                 state: 1,
             }
             this.pointsSet = [
-                [{ x: 0, y: 0 }, { x: -1, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }],
-                [{ x: 0, y: 0 }, { x: -1, y: 1 }, { x: 0, y: -1 }, { x: 0, y: 1 }],
-                [{ x: 0, y: 0 }, { x: -1, y: -1 }, { x: -1, y: 0 }, { x: 1, y: 0 }],
-                [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }, { x: 1, y: -1 }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: -1,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: 1
+                }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: -1,
+                    y: 1
+                }, {
+                    x: 0,
+                    y: -1
+                }, {
+                    x: 0,
+                    y: 1
+                }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: -1,
+                    y: -1
+                }, {
+                    x: -1,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: 0
+                }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: 1
+                }, {
+                    x: 0,
+                    y: -1
+                }, {
+                    x: 1,
+                    y: -1
+                }],
             ];
         }
+
         function L_block() {
             BlockMovements.call(this);
             this.name = 'l-block';
@@ -388,12 +474,61 @@ class Block {
                 state: 1,
             }
             this.pointsSet = [
-                [{ x: 0, y: 0 }, { x: -1, y: 0 }, { x: 1, y: 0 }, { x: -1, y: 1 }],
-                [{ x: 0, y: 0 }, { x: -1, y: -1 }, { x: 0, y: -1 }, { x: 0, y: 1 }],
-                [{ x: 0, y: 0 }, { x: 1, y: -1 }, { x: -1, y: 0 }, { x: 1, y: 0 }],
-                [{ x: 0, y: 0 }, { x: 0, y: -1 }, { x: 0, y: 1 }, { x: 1, y: 1 }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: -1,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: 0
+                }, {
+                    x: -1,
+                    y: 1
+                }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: -1,
+                    y: -1
+                }, {
+                    x: 0,
+                    y: -1
+                }, {
+                    x: 0,
+                    y: 1
+                }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: -1
+                }, {
+                    x: -1,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: 0
+                }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: -1
+                }, {
+                    x: 0,
+                    y: 1
+                }, {
+                    x: 1,
+                    y: 1
+                }],
             ];
         }
+
         function O_block() {
             BlockMovements.call(this);
             this.name = 'o-block';
@@ -407,9 +542,22 @@ class Block {
                 state: 1,
             }
             this.pointsSet = [
-                [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }]
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: 1
+                }, {
+                    x: 1,
+                    y: 1
+                }]
             ];
         }
+
         function S_block() {
             BlockMovements.call(this);
             this.name = 's-block';
@@ -423,10 +571,35 @@ class Block {
                 state: 1,
             }
             this.pointsSet = [
-                [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: -1, y: 1 }, { x: 0, y: 1 }],
-                [{ x: 0, y: 0 }, { x: 0, y: -1 }, { x: 1, y: 0 }, { x: 1, y: 1 }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: 0
+                }, {
+                    x: -1,
+                    y: 1
+                }, {
+                    x: 0,
+                    y: 1
+                }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: -1
+                }, {
+                    x: 1,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: 1
+                }],
             ];
         }
+
         function Z_block() {
             BlockMovements.call(this);
             this.name = 'z-block';
@@ -440,10 +613,35 @@ class Block {
                 state: 1,
             }
             this.pointsSet = [
-                [{ x: 0, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }],
-                [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: -1 }, { x: 1, y: 0 }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: -1,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: 1
+                }, {
+                    x: 1,
+                    y: 1
+                }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: 1
+                }, {
+                    x: 1,
+                    y: -1
+                }, {
+                    x: 1,
+                    y: 0
+                }],
             ];
         }
+
         function T_block() {
             BlockMovements.call(this);
             this.name = 't-block';
@@ -457,10 +655,58 @@ class Block {
                 state: 1,
             }
             this.pointsSet = [
-                [{ x: 0, y: 0 }, { x: -1, y: 0 }, { x: 1, y: 0 }, { x: 0, y: 1 }],
-                [{ x: 0, y: 0 }, { x: -1, y: 0 }, { x: 0, y: -1 }, { x: 0, y: 1 }],
-                [{ x: 0, y: 0 }, { x: 0, y: -1 }, { x: -1, y: 0 }, { x: 1, y: 0 }],
-                [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }, { x: 1, y: 0 }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: -1,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: 1
+                }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: -1,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: -1
+                }, {
+                    x: 0,
+                    y: 1
+                }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: -1
+                }, {
+                    x: -1,
+                    y: 0
+                }, {
+                    x: 1,
+                    y: 0
+                }],
+                [{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 0,
+                    y: 1
+                }, {
+                    x: 0,
+                    y: -1
+                }, {
+                    x: 1,
+                    y: 0
+                }],
             ];
         }
     }
@@ -571,32 +817,47 @@ class Stats {
 }
 
 class Control {
-    constructor() {
+    constructor(controller) {
+
+        const voc = {
+            68: 'B', //D
+            70: 'A', //F
+            39: 'Right',
+            37: 'Left',
+            40: 'Down',
+            'button-b': 'B',
+            'button-a': 'A',
+            'button-right': 'Right',
+            'button-left': 'Left',
+            'button-down': 'Down'
+        }
+
         this.key = {};
         this.keydown = (e) => {
+            console.log(voc[e.keyCode || e.srcElement.id]);
             //Если такая кнопка уже нажата (избавляемся от системных повторов нажатия (система клацает сама, при зажатии клавиши))
             if (this.key[e.keyCode]) return;
-            //Какая кнопка нажата
+            //Какая кнопка на калавиатуре нажата
             this.key[e.keyCode] = true;
-            switch (e.keyCode) {
-                //D
-                case 68:
+
+            switch (voc[e.keyCode || e.srcElement.id]) {
+                case 'B':
                     e.preventDefault();
                     block.activeBlock.rotateLeft();
                     return;
-                //F
-                case 70:
+                case 'A':
                     e.preventDefault();
                     block.activeBlock.rotateRight();
                     return;
                 default:
                     break;
             }
+
             clearInterval(this.shiftRepeatInterval);
             clearTimeout(this.autoShiftDelay);
-            switch (e.keyCode) {
-                //ArrowRight
-                case 39:
+
+            switch (voc[e.keyCode || e.srcElement.id]) {
+                case 'Right':
                     e.preventDefault();
                     block.activeBlock.moveRight();
                     this.autoShiftDelay = setTimeout(() => {
@@ -605,8 +866,7 @@ class Control {
                         }, 80);
                     }, 160);
                     break;
-                //ArrowLeft
-                case 37:
+                case 'Left':
                     e.preventDefault();
                     block.activeBlock.moveLeft();
                     this.autoShiftDelay = setTimeout(() => {
@@ -615,8 +875,7 @@ class Control {
                         }, 80);
                     }, 160);
                     break;
-                //ArrowDown
-                case 40:
+                case 'Down':
                     e.preventDefault();
                     this.shiftRepeatInterval = setInterval(() => {
                         block.activeBlock.moveDown()
@@ -632,11 +891,11 @@ class Control {
             delete this.key[e.keyCode];
             //Если были нажаты кнопки поворота, то не стоит сбрасывать интервалы повтора перемещний,
             //иначе движение фигуры по зажатой кнопке (влево/вправо), прекратится
-            switch (e.keyCode) {
-                case 68:
-                case 70:
+            switch (voc[e.keyCode || e.srcElement.id]) {
+                case 'B':
+                case 'A':
                     return;
-                case 40:
+                case 'Down':
                     //Сообщаем об отпущенной клавише вниз (необходимо для подсчета строк, за которые дропнется блок)
                     emitter.emit('control:downPressed', false);
                     break;
@@ -646,10 +905,17 @@ class Control {
             clearInterval(this.shiftRepeatInterval);
             clearTimeout(this.autoShiftDelay);
         }
+
         this.startListenKeyboard(); //?
+
         emitter.subscribe("canvas:wipeAnimationStart", () => this.stopListenKeyboard()); //Блокируем управление во время анимации
         emitter.subscribe("block:gameOver", () => this.stopListenKeyboard()); //Блокируем управление по gameover
         emitter.subscribe("canvas:wipeAnimationEnd", () => this.startListenKeyboard()); //Разблокируем управлениепосле анимации
+
+        controller.querySelectorAll('button').forEach((button) => {
+            button.addEventListener('touchstart', this.keydown);
+            button.addEventListener('touchend', this.keyup);
+        });
     }
 
     stopListenKeyboard() {
@@ -664,6 +930,7 @@ class Control {
         document.addEventListener('keydown', this.keydown);
         document.addEventListener('keyup', this.keyup);
     }
+
 }
 
 class Ticker {
@@ -693,8 +960,6 @@ class Ticker {
         emitter.subscribe('canvas:wipeAnimationStart', this.stop);
         emitter.subscribe('canvas:wipeAnimationEnd', this.start);
     }
-
-
 
 
 }
@@ -740,7 +1005,7 @@ let canvas = new Canvas(document.getElementsByTagName('canvas')[0]);
 let matrix = new Matrix();
 let block = new Block();
 let stats = new Stats(document.getElementsByClassName('game')[0]);
-let control = new Control();
+let control = new Control(document.getElementById('controller'));
 let textures = new Textures();
 let ticker = new Ticker();
 
