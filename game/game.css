@@ -1,165 +1,30 @@
+:root{
+    --cyan: rgba(0, 255, 255, 1);
+    --cyan-2: rgba(0, 255, 255, .5);
+    --cyan-3: rgba(0, 255, 255, .33);
+    --white5: rgba(255, 255, 255, 0.6); 
+}
+
 canvas {
     width: 100% !important;
     height: 100% !important;
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
-
-/* Panels start */
-
-.panel {
-    width: 150px;
-    height: 500px;
-    box-sizing: border-box;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-    text-align: center;
-    border: 5px solid #393939;
-    margin: 2px;
-    padding: 5px;
-}
-
-.panel.stats div {
-    display: flex;
-    justify-content: space-between;
-    align-content: flex-start;
-    margin: 0 10px;
-}
-
-.panel.stats div:last-child {
-    margin-bottom: 10px;
-}
-
-.panel.glass {
-    position: relative;
-    padding: 2px;
-    width: 250px;
-    height: 500px;
-}
-
-@media (max-width:1000px) {
-    .panel.stats {
-        display: none;
-    }
-
-    .panel {
-        margin: 0;
-        max-width: 150px;
-        width: 20vw;
-        max-height: 500px;
-        height: calc(30vw * 2);
-    }
-
-    .panel.glass {
-        max-width: 250px;
-        width: 30vw;
-        max-height: 500px;
-        height: calc(30vw * 2);
-    }
-
-    .game:not(.competitive) .panel {
-        margin: 0;
-        max-width: 150px;
-        width: calc(100vw - 150px);
-        max-height: 500px;
-        height: calc((100vw - 150px) * 2);
-    }
-
-    .game:not(.competitive) .panel.glass {
-        max-width: 250px;
-        width: calc(100vw - 150px);
-        max-height: 500px;
-        height: calc((100vw - 150px) * 2);
-    }
-}
-
-@media (max-height:540px) {
-    .competitive .player {
-        flex-direction: row-reverse;
-    }
-
-    .game .panel {
-        min-width: calc(95vh / 3);
-        width: calc(95vh / 3);
-        max-height: 95vh;
-    }
-
-    .game .panel.glass {
-        width: calc(95vh / 2);
-        height: 95vh;
-    }
-
-    .game:not(.competitive) .panel {
-        min-width: calc(95vh / 3);
-        width: calc(95vh / 3);
-        max-height: 95vh;
-    }
-
-    .game:not(.competitive) .panel.glass {
-        width: calc(95vh / 2);
-        height: 95vh;
-    }
-}
-
-.panel .title {
-    margin: 10px 0;
-}
-
-/* Panel => block-image */
-
-.panel .block-image {
-    max-width: 48px;
-    max-height: 32px
-}
-
-.panel .block-image[src*="i-block"] {
-    max-width: 64px;
-    max-height: 16px;
-}
-
-/* Panel => img-wrap */
-
-.panel .img-wrap {
-    min-height: 44px;
-}
-
-.panel .img-wrap img[src="#"] {
-    visibility: hidden;
-}
-
-/* Panel => Tetris animation for panel */
-
-@keyframes blink-animation {
-    0% {
-        border: 4px solid #fff;
-        background-color: rgba(255, 255, 255, .1);
-        filter: brightness(1.5);
-        box-shadow: 0 0 0 4px rgba(0, 0, 0, .35);
-    }
-
-    100% {
-        border: 4px solid #393939;
-    }
-}
-
-.blink-animation .panel {
-    animation: blink-animation .0142s steps(2, end) infinite;
-}
-
-/* Panels end */
 
 /* ================================= */
 
 /* === MAIN === */
 
 main {
-    max-width: 1300px;
-    margin: 40px auto;
-    padding: 40px 0;
-    background: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    /* padding: 40px 0; */
+    /* background: rgba(0, 0, 0, 0.8); */
+    background-image: url(bg.png)
 }
 
 /* === MAIN === (competitive mode) */
@@ -263,6 +128,7 @@ main.competitive .opponent {
 /* === RECORDS === */
 
 .records .panel {
+    min-width: 200px;
     box-sizing: border-box;
     padding: 10px;
     display: flex;

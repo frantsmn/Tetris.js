@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <!-- game -->
     <link rel="stylesheet" href="game/game.css">
+    <link rel="stylesheet" href="game/panel.css">
     <link rel="stylesheet" href="game/controller.css">
     <script src="game/tetris.js" defer></script>
     <!-- plugs -->
@@ -20,13 +21,13 @@
 
 <body>
 
-    <header>
-        <H1>Tetris.js</H1>
-        <!-- <p>Implementation of «NES Tetris» game using JavaScript</p> -->
-    </header>
+    <!-- <header> -->
+    <!-- <H1>Tetris.js</H1> -->
+    <!-- <p>Implementation of «NES Tetris» game using JavaScript</p> -->
+    <!-- </header> -->
 
-    <main class="game competitive">
-    <!-- <main class="game"> -->
+    <!-- <main class="game competitive"> -->
+    <main class="game">
 
         <!-- <section class="head">
             <div class="window-buttons">
@@ -58,7 +59,7 @@
                 <div class="panel glass">
 
                     <canvas width="200" height="400"></canvas>
-                    <div class="player-overlay">
+                    <div class="player-overlay hidden">
                         <p class="title">PAUSE</p>
                         <button class="neon">Start new</button>
                         <button class="neon">Continiue game</button>
@@ -101,11 +102,11 @@
 
             </section>
 
-           <section class="opponent">
+            <section class="opponent">
                 <div class="panel glass">
                     <canvas width="200" height="400"></canvas>
                     <div class="opponent-overlay">
-                        
+
                     </div>
                 </div>
                 <div class="panel info">
@@ -144,7 +145,7 @@
 
         </section>
 
-        <section class="records">
+        <section class="records hidden">
             <div class="panel">
                 <p class="title">highscores</p>
                 <div class="grid-container">
@@ -175,10 +176,12 @@
     <section id="controller">
         <div class="d-pad">
             <div class="sides">
-                <button id="button-left">←</button>
-                <button id="button-right">→</button>
+                <button id="button-left">◀</button>
+                <button id="button-right">▶</button>
             </div>
-            <button id="button-down">↓</button>
+            <div class="down">
+                <button id="button-down">▼</button>
+            </div>
         </div>
         <div class="pause-wrap">
             <button class="button-pause">PAUSE</button>

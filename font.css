@@ -25,24 +25,24 @@ h2 {
 
 @media (max-width:800px) {
     body {
-        font-size: 12px;
+        font-size: 13px;
     }
 }
 
 @media (max-width:600px) {
     body {
-        font-size: 10px;
+        font-size: 12px;
     }
 }
 
 @media (max-width:500px) {
     body {
-        font-size: 8px;
+        font-size: 11px;
     }
 }
 
 @media (max-width:400px) {
     body {
-        font-size: 7px;
+        font-size: 10px;
     }
 }
