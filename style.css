@@ -6,15 +6,11 @@ html, body {
 
 body {
     background-color: #272727;
-    background-image: url(./background.png);
+    background-image: url('./background.png');
     background-attachment: fixed;
     background-size: 5%;
 }
 
-header {
-    text-align: center;
-}
-
-footer {
+header, footer {
     text-align: center;
 }

@@ -3,41 +3,46 @@
     src: url(./fonts/PressStart2P-Regular.ttf);
 }
 
-*, :before, :after {
+body {
+    font-family: 'Press Start 2P', 'Franklin Gothic Medium', Arial, sans-serif;
+    color: white;
     font-size: 15px;
 }
 
+h1 {
+    font-size: 1.5em;
+}
+
+h2 {
+    font-size: 1.2em
+}
+
 @media (max-width:1000px) {
-    *, :before, :after {
+    body {
         font-size: 14px;
     }
 }
 
 @media (max-width:800px) {
-    *, :before, :after {
+    body {
         font-size: 12px;
     }
 }
 
 @media (max-width:600px) {
-    *, :before, :after {
+    body {
         font-size: 10px;
     }
 }
 
 @media (max-width:500px) {
-    *, :before, :after {
+    body {
         font-size: 8px;
     }
 }
 
 @media (max-width:400px) {
-    *, :before, :after {
+    body {
         font-size: 7px;
     }
-}
-
-h1, h2, p, span {
-    font-family: 'Press Start 2P', 'Franklin Gothic Medium', Arial, sans-serif;
-    color: white;
 }
