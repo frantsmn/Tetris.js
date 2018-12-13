@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <!-- game -->
     <link rel="stylesheet" href="game/game.css">
+    <link rel="stylesheet" href="game/controller.css">
     <script src="game/tetris.js" defer></script>
     <!-- plugs -->
     <link rel="stylesheet" href="neon-buttons/neon-buttons.css">
@@ -148,17 +149,17 @@
                 <p class="title">highscores</p>
                 <div class="grid-container">
                     <div>Player1</div>
-                    <div>999999</div>
+                    <div>128532</div>
                     <div>Player2</div>
-                    <div>0</div>
+                    <div>95285</div>
                     <div>Player3</div>
-                    <div>0</div>
+                    <div>73284</div>
                     <div>Player4</div>
-                    <div>0</div>
+                    <div>57223</div>
                     <div>Player5</div>
-                    <div>0</div>
+                    <div>12023</div>
                     <div>Player6</div>
-                    <div>0</div>
+                    <div>128</div>
                     <div>Player7</div>
                     <div>0</div>
                     <div>Player8</div>
@@ -172,12 +173,15 @@
     </main>
 
     <section id="controller">
-        <div class="cross">
+        <div class="d-pad">
             <div class="sides">
                 <button id="button-left">←</button>
                 <button id="button-right">→</button>
             </div>
             <button id="button-down">↓</button>
+        </div>
+        <div class="pause-wrap">
+            <button class="button-pause">PAUSE</button>
         </div>
         <div class="buttons">
             <button id="button-b">B</button>
@@ -186,7 +190,7 @@
     </section>
 
     <footer>
-        <p>FM © 2018</p>
+        <!-- <p>FM © 2018</p> -->
     </footer>
 </body>
 

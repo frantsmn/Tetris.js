@@ -1,0 +1,122 @@
+#controller {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    box-sizing: border-box;
+    width: 100vw;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+#controller button {
+    outline: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* CROSS */
+
+#controller .d-pad {
+    display: flex;
+    width: 150px;
+    height: 130px;
+    padding: 20px 20px 10px 10px;
+    border-top-right-radius: 50px;
+    background: rgba(70, 70, 70, .5);
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#controller .d-pad .sides {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+#controller .d-pad button {
+    font-size: 40px;
+    font-weight: bold;
+    line-height: 0;
+    width: 65px;
+    height: 65px;
+    padding-bottom: 12px;
+    transition: all .13s ease;
+    color: rgba(255, 255, 255, .25);
+    border: solid 3px rgba(255, 255, 255, .15);
+    border-radius: 20%;
+    background: rgba(255, 255, 255, .1);
+}
+
+#controller .d-pad button.active {
+    border: solid 3px rgba(255, 255, 255, .2);
+    background: rgba(255, 255, 255, .5);
+    box-shadow: 0 0 45px 5px rgba(255, 255, 255, .5);
+}
+
+#controller .d-pad #button-down {
+    width: 55px;
+    height: 55px;
+    padding-bottom: 4px;
+}
+
+/* PAUSE */
+
+#controller .pause-wrap {
+    position: absolute;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background: rgba(70, 70, 70, .5);
+    left: 50%;
+    width: 100px;
+    height: 40px;
+    z-index: 1;
+}
+
+#controller .pause-wrap button {
+    width: 80px;
+    height: 25px;
+    border: solid 3px rgba(130, 130, 130, 1);
+    border-radius: 30px;
+    background-color: rgba(155, 155, 155, 1);
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* BUTTONS */
+
+#controller .buttons {
+    display: flex;
+    width: 160px;
+    height: 130px;
+    padding: 20px 10px 10px 20px;
+    border-top-left-radius: 50px;
+    /* background: rgba(255, 0, 0, .1);*/
+    background: rgba(70, 70, 70, .5);
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+#controller .buttons button {
+    font-size: 25px;
+    font-weight: bold;
+    width: 70px;
+    height: 70px;
+    transition: all .13s ease;
+    color: rgba(255, 0, 0, .25);
+    border: solid 3px rgba(255, 0, 0, .1);
+    border-radius: 50%;
+    background-color: rgba(255, 0, 0, .15);
+}
+
+#controller .buttons button.active {
+    border: solid 3px rgba(255, 0, 0, .2);
+    background-color: rgba(255, 0, 0, .5);
+    box-shadow: 0 0 45px 5px rgba(255, 0, 0, .5);
+}
