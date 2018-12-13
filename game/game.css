@@ -288,14 +288,11 @@ main.competitive .opponent {
 /* === CONTROLLER === */
 
 #controller {
-    pointer-events: none;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    -webkit-tap-highlight-color: transparent;
+    /* -webkit-tap-highlight-color: transparent; */
     position: fixed;
     box-sizing: border-box;
-    padding-left: 10px;
-    padding-right: 10px;
-    bottom: 5%;
+    bottom: 0;
+    left: 0;
     width: 100vw;
     display: flex;
     flex-flow: row nowrap;
@@ -303,13 +300,15 @@ main.competitive .opponent {
 }
 
 #controller .cross {
-    pointer-events: all;
     height: 130px;
     width: 150px;
+    padding: 20px 20px 10px 10px;
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
     align-items: center;
+    border-top-right-radius: 50px;
+    background: rgba(70, 70, 70, 0.5);
 }
 
 #controller .cross .sides {
@@ -318,27 +317,40 @@ main.competitive .opponent {
     justify-content: space-between;
 }
 
-#controller .cross #button-left,
-#controller .cross #button-right,
-#controller .cross #button-down {
+#controller .cross button {
     width: 65px;
     height: 65px;
-    border-radius: 10%;
-    font-size: 25px;
+    border-radius: 20%;
+    font-size: 40px;
+    line-height: 0;
+    padding-bottom: 12px;
     font-weight: bold;
     color: rgba(255, 255, 255, 0.25);
     border: solid 3px rgba(255, 255, 255, 0.15);
     background: rgba(255, 255, 255, 0.1);
     outline: 0;
+    transition: all 0.13s ease;
+}
+
+#controller .cross button.active {
+    box-shadow: 0 0 45px 5px rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.5);
+    border: solid 3px rgba(255, 255, 255, 0.2);
 }
 
 #controller .cross #button-down {
-    width: 50px;
-    height: 50px;
+    padding-bottom: 4px;
+    width: 55px;
+    height: 55px;
 }
 
 #controller .buttons {
-    pointer-events: all;
+    border-top-left-radius: 50px;
+    background: rgba(255, 0, 0, 0.1);
+    padding: 20px 10px 10px 20px;
+}
+
+#controller .buttons {
     height: 130px;
     width: 160px;
     display: flex;
@@ -346,8 +358,7 @@ main.competitive .opponent {
     justify-content: space-between;
 }
 
-#controller .buttons #button-b,
-#controller .buttons #button-a {
+#controller .buttons button {
     height: 70px;
     width: 70px;
     font-size: 25px;
@@ -357,6 +368,13 @@ main.competitive .opponent {
     border: solid 3px rgba(255, 0, 0, 0.1);
     border-radius: 50%;
     outline: 0;
+    transition: all 0.13s ease;
+}
+
+#controller .buttons button.active {
+    box-shadow: 0 0 45px 5px rgba(255, 0, 0, 0.5);
+    background-color: rgba(255, 0, 0, 0.5);
+    border: solid 3px rgba(255, 0, 0, 0.2);
 }
 
 .hide {

@@ -834,7 +834,9 @@ class Control {
 
         this.key = {};
         this.keydown = (e) => {
-            console.log(voc[e.keyCode || e.srcElement.id]);
+            //Стили для нажатой тач-кнопки
+            e.srcElement.classList.add('active');
+
             //Если такая кнопка уже нажата (избавляемся от системных повторов нажатия (система клацает сама, при зажатии клавиши))
             if (this.key[e.keyCode]) return;
             //Какая кнопка на калавиатуре нажата
@@ -888,6 +890,9 @@ class Control {
             }
         }
         this.keyup = (e) => {
+            //Стили для отпущенной тач-кнопки
+            e.srcElement.classList.remove('active');
+
             delete this.key[e.keyCode];
             //Если были нажаты кнопки поворота, то не стоит сбрасывать интервалы повтора перемещний,
             //иначе движение фигуры по зажатой кнопке (влево/вправо), прекратится
