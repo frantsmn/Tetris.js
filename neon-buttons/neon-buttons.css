@@ -67,6 +67,7 @@
     }
 
 .neon {
+    -webkit-tap-highlight-color: transparent;
     position: relative;
     font-family: 'Press Start 2P', 'Franklin Gothic Medium', Arial, sans-serif;
     font-size: 0.9em;
@@ -78,7 +79,7 @@
     cursor: pointer;
 }
 
-.neon:hover, .neon:focus {
+.neon.active, .neon:focus {
     outline: 0;
     color: rgba(0, 255, 255, 1);
     text-shadow: 0 0 10px rgba(0, 255, 255, 1);
