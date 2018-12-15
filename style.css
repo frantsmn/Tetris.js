@@ -1,21 +1,45 @@
+:root {
+    --cyan: rgba(0, 255, 255, 1);
+    --cyan-2: rgba(0, 255, 255, .5);
+    --cyan-3: rgba(0, 255, 255, .33);
+    --white5: rgba(255, 255, 255, 0.6);
+}
+
+.hidden {
+    display: none !important;
+}
+
+
 body {
-	margin: 0;
+	margin: 0 auto;
 	padding: 0;
 	user-select: none;
 
-	width: 100vw;
-	height: 100vh;
+	width: min-content;
+	height: 100%;
+
 	color: #fff;
 	background: rgb(50, 50, 50) url(../background.png);
 	background-size: 18px;
-
 	display: flex;
 	flex-flow: column nowrap;
 	justify-content: flex-start;
 	align-items: center;
 }
 
-header,
-footer {
-	text-align: center;
+header {
+	width: 100%;
+    white-space: nowrap;
+    margin: 6px 0px 3px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+header>div {
+    display: flex;
+}
+
+header button {
+    margin: 0 2px 3px;
 }

@@ -12,10 +12,8 @@
     background: rgba(0, 0, 0, 0.8);
     margin: 4px;
     padding: 5px;
-
     width: 160px;
     max-width: 160px;
-
     height: 500px;
     max-height: 500px;
 }
@@ -38,10 +36,8 @@
 .panel.glass {
     position: relative;
     padding: 2px;
-
     width: 250px;
     max-width: 250px;
-
     height: 500px;
     max-height: 500px;
 }
@@ -56,83 +52,52 @@
         margin: 0;
         box-shadow: none;
         border-radius: 0;
-
-        /* min-width: calc(40vw); */
         width: 40vw;
-        max-width: 250px;
-
-        /* min-height: calc(40vw*2); */
         height: calc(60vw*2);
-        max-height: 500px;
     }
-     .panel.glass {
-        /* min-width: calc(40vw); */
+    .panel.glass {
         width: 60vw;
-        max-width: 250px;
-
-        /* min-height: calc(40vw*2); */
         height: calc(60vw*2);
-        max-height: 500px;
     }
 }
 
 @media (max-height:580px) and (orientation: landscape) {
- .player {
+    .player {
         flex-direction: row-reverse;
     }
-     .panel {
-        min-width: calc(95vh / 3);
+    .panel.stats {
+        display: none;
+    }
+    .panel {
+        margin: 0;
+        box-shadow: none;
+        border-radius: 0;
         width: calc(95vh / 3);
-
-        min-height: 95vh;
         height: 95vh;
     }
-     .panel.glass {
+    .panel.glass {
         width: calc(95vh / 2);
-        max-width: calc(95vh / 2);
         height: 95vh;
-        min-height: 95vh;
     }
 }
 
 /* Panel (Mobile) — COMPETITIVE */
 
 @media (max-width:1000px) {
+    .game.competitive .panel.stats {
+        display: none;
+    }
     .game.competitive .panel {
         margin: 0;
         box-shadow: none;
         border-radius: 0;
-
         width: 20vw;
-        min-width: 20vw;
-
         height: calc(30vw * 2);
-        min-height: calc(30vw * 2);
-    }
-    .game.competitive .panel.stats {
-        display: none;
     }
     .game.competitive .panel.glass {
         width: 30vw;
-        min-width: 30vw;
-
-        height: calc(30vw * 2);
-        min-height: calc(30vw * 2);
+        max-width: 30vw;
     }
-
-    /* .game:not(.competitive) .panel {
-        margin: 0;
-        max-width: 160px;
-        width: calc(100vw - 160px);
-        max-height: 500px;
-        height: calc((100vw - 160px) * 2);
-    }
-    .game:not(.competitive) .panel.glass {
-        max-width: 250px;
-        width: calc(100vw - 160px);
-        max-height: 500px;
-        height: calc((100vw - 160px) * 2);
-    } */
 }
 
 @media (max-height:580px) and (orientation: landscape) {
@@ -140,42 +105,17 @@
         flex-direction: row-reverse;
     }
     .game.competitive .panel {
-        min-width: calc(95vh / 3);
         width: calc(95vh / 3);
-        min-height: 95vh;
         height: 95vh;
     }
     .game.competitive .panel.glass {
         width: calc(95vh / 2);
         max-width: calc(95vh / 2);
-        height: 95vh;
-        min-height: 95vh;
     }
-    /* .game:not(.competitive) .panel {
-        min-width: calc(95vh / 3);
-        width: calc(95vh / 3);
-        max-height: 95vh;
-    }
-    .game:not(.competitive) .panel.glass {
-        width: calc(95vh / 2);
-        height: 95vh;
-    } */
 }
 
 .panel .title {
     margin: 10px 0;
-}
-
-/* Panel => block-image */
-
-.panel .block-image {
-    max-width: 48px;
-    max-height: 32px
-}
-
-.panel .block-image[src*="i-block"] {
-    max-width: 64px;
-    max-height: 16px;
 }
 
 /* Panel => img-wrap */
@@ -186,6 +126,18 @@
 
 .panel .img-wrap img[src="#"] {
     visibility: hidden;
+}
+
+/* Panel => img-wrap => block-image */
+
+.panel .block-image {
+    max-width: 48px;
+    max-height: 32px
+}
+
+.panel .block-image[src*="i-block"] {
+    max-width: 64px;
+    max-height: 16px;
 }
 
 /* Panel => Tetris animation for panel */
@@ -203,6 +155,62 @@
 
 .blink-animation .panel {
     animation: blink-animation .0142s steps(2, end) infinite;
+}
+
+/*COMPETITITVE - adaptive content*/
+
+@media (max-width:1000px) {
+    .game.competitive .panel {
+        font-size: 14px;
+    }
+}
+
+@media (max-width:800px) {
+    .game.competitive .panel {
+        font-size: 13px;
+    }
+}
+
+@media (max-width:600px) {
+    .game.competitive .panel {
+        font-size: 12px;
+    }
+}
+
+@media (max-width:500px) {
+    .game.competitive .panel {
+        font-size: 11px;
+    }
+    /* Panel => img-wrap => block-image */
+    .game.competitive .panel .block-image {
+        max-width: 40px;
+        max-height: 24px
+    }
+    .game.competitive .panel .block-image[src*="i-block"] {
+        max-width: 56px;
+        max-height: 10px;
+    }
+    .game.competitive .panel .title {
+        margin: 6px 0;
+    }
+}
+
+@media (max-width:380px) {
+    .game.competitive .panel {
+        font-size: 8px;
+    }
+    /* Panel => img-wrap => block-image */
+    .game.competitive .panel .block-image {
+        max-width: 36px;
+        max-height: 20px
+    }
+    .game.competitive .panel .block-image[src*="i-block"] {
+        max-width: 52px;
+        max-height: 4px;
+    }
+    .game.competitive .panel .title {
+        margin: 4px 0;
+    }
 }
 
 /* Panel end */

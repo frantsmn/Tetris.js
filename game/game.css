@@ -1,17 +1,6 @@
-:root {
-    --cyan: rgba(0, 255, 255, 1);
-    --cyan-2: rgba(0, 255, 255, .5);
-    --cyan-3: rgba(0, 255, 255, .33);
-    --white5: rgba(255, 255, 255, 0.6);
-}
-
 canvas {
     width: 100% !important;
     height: 100% !important;
-}
-
-.hidden {
-    display: none !important;
 }
 
 /* ================================= */
@@ -38,35 +27,6 @@ main.competitive .panel.stats {
 
 main.competitive .opponent {
     display: flex;
-}
-
-/* === HEAD === */
-
-.head {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
-
-.head .window-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
-
-.head .player-overlay {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-.head .user-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: flex-start;
 }
 
 /* === PLAYER & OPPONENT === */
@@ -142,7 +102,7 @@ main.competitive .opponent {
 }
 
 * {
-    /* outline: 1px grey;
+    /* outline: 1px red;
     outline-offset: 1px;
     outline-style: groove; */
 }

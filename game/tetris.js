@@ -141,7 +141,7 @@ class Textures {
 
         this.level = 0;
 
-        emitter.subscribe('stats:newLevel', (level) => {
+        EMITTER.subscribe('stats:newLevel', (level) => {
             this.level = level % 10;
         });
     }
@@ -205,7 +205,7 @@ class Canvas {
         let context = this.context;
 
         //Трансляция события начала анимации
-        emitter.emit('canvas:wipeAnimationStart');
+        EMITTER.emit('canvas:wipeAnimationStart');
 
         let i = 0;
         let interval = setInterval(() => {
@@ -220,7 +220,7 @@ class Canvas {
                 canvas.drawState(matrix.getFixedMatrix());
 
                 //Трансляция события окончания анимации
-                emitter.emit('canvas:wipeAnimationEnd');
+                EMITTER.emit('canvas:wipeAnimationEnd');
 
                 return callback();
             }
@@ -281,7 +281,7 @@ class Block {
                     if (this.position.y === 0) {
                         drawBlock();
                         //Сообщаем что gameover
-                        emitter.emit('block:gameOver');
+                        EMITTER.emit('block:gameOver');
                         //Анимация gameOver
                         canvas.gameOverAnimation();
                     }
@@ -289,7 +289,7 @@ class Block {
                     matrix.fixPoints(this.position.x, this.position.y, this.pointsSet[this.rotation.state - 1]);
 
                     //Сообщаем что блок упал
-                    emitter.emit('block:blockFixed');
+                    EMITTER.emit('block:blockFixed');
 
                     //Если есть заполненные линии
                     if (matrix.getFullLines().length) {
@@ -737,11 +737,11 @@ class Stats {
         //Счетчик высоты падения блока
         let fallLinesCounter = 0;
         //Подсчет высоты падения блока с зажатой кнопкой вниз
-        emitter.subscribe("control:downPressed", (downPressed) => {
+        EMITTER.subscribe("control:downPressed", (downPressed) => {
             fallLinesCounter = downPressed ? fallLinesCounter + 1 : 0;
         });
         //Добавление к очкам высоты падения
-        emitter.subscribe('block:blockFixed', () => {
+        EMITTER.subscribe('block:blockFixed', () => {
             this.score += fallLinesCounter;
         });
 
@@ -758,7 +758,7 @@ class Stats {
         //При переходе на следующий уровень, уведомляем класс Текстур шо опра менять
         if (this.level < Math.floor(this.lines / 10)) {
             this.level = Math.floor(this.lines / 10);
-            emitter.emit('stats:newLevel', this.level);
+            EMITTER.emit('stats:newLevel', this.level);
         }
         switch (n) {
             case 1:
@@ -882,7 +882,7 @@ class Control {
                     this.shiftRepeatInterval = setInterval(() => {
                         block.activeBlock.moveDown()
                         //Сообщаем о натой клавише вниз (необходимо для подсчета строк, за которые дропнется блок)
-                        emitter.emit('control:downPressed', true);
+                        EMITTER.emit('control:downPressed', true);
                     }, 50);
                     break;
                 default:
@@ -902,7 +902,7 @@ class Control {
                     return;
                 case 'Down':
                     //Сообщаем об отпущенной клавише вниз (необходимо для подсчета строк, за которые дропнется блок)
-                    emitter.emit('control:downPressed', false);
+                    EMITTER.emit('control:downPressed', false);
                     break;
                 default:
                     break;
@@ -913,14 +913,9 @@ class Control {
 
         this.startListenKeyboard(); //?
 
-        emitter.subscribe("canvas:wipeAnimationStart", () => this.stopListenKeyboard()); //Блокируем управление во время анимации
-        emitter.subscribe("block:gameOver", () => this.stopListenKeyboard()); //Блокируем управление по gameover
-        emitter.subscribe("canvas:wipeAnimationEnd", () => this.startListenKeyboard()); //Разблокируем управлениепосле анимации
-
-        controller.querySelectorAll('button').forEach((button) => {
-            button.addEventListener('touchstart', this.keydown);
-            button.addEventListener('touchend', this.keyup);
-        });
+        EMITTER.subscribe("canvas:wipeAnimationStart", () => this.stopListenKeyboard()); //Блокируем управление во время анимации
+        EMITTER.subscribe("block:gameOver", () => this.stopListenKeyboard()); //Блокируем управление по gameover
+        EMITTER.subscribe("canvas:wipeAnimationEnd", () => this.startListenKeyboard()); //Разблокируем управление после анимации
     }
 
     stopListenKeyboard() {
@@ -928,14 +923,23 @@ class Control {
         clearTimeout(this.autoShiftDelay);
         document.removeEventListener('keydown', this.keydown);
         document.removeEventListener('keyup', this.keyup);
+
+        controller.querySelectorAll('button').forEach((button) => {
+            button.removeEventListener('touchstart', this.keydown);
+            button.removeEventListener('touchend', this.keyup);
+        });
     }
 
     startListenKeyboard() {
         this.key = {};
         document.addEventListener('keydown', this.keydown);
         document.addEventListener('keyup', this.keyup);
-    }
 
+        controller.querySelectorAll('button').forEach((button) => {
+            button.addEventListener('touchstart', this.keydown);
+            button.addEventListener('touchend', this.keyup);
+        });
+    }
 }
 
 class Ticker {
@@ -944,7 +948,7 @@ class Ticker {
         this.delay = [800, 717, 633, 550, 467, 383, 300, 217, 133, 100, 83, 83, 83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 17];
         this.setInterval = null;
 
-        emitter.subscribe('stats:newLevel', (level) => {
+        EMITTER.subscribe('stats:newLevel', (level) => {
             this.actualLevel = level;
             this.stop();
             this.start(this.actualLevel);
@@ -961,50 +965,50 @@ class Ticker {
             clearInterval(this.setInterval);
         }
 
-        emitter.subscribe('block:gameOver', this.stop);
-        emitter.subscribe('canvas:wipeAnimationStart', this.stop);
-        emitter.subscribe('canvas:wipeAnimationEnd', this.start);
+        EMITTER.subscribe('block:gameOver', this.stop);
+        EMITTER.subscribe('canvas:wipeAnimationStart', this.stop);
+        EMITTER.subscribe('canvas:wipeAnimationEnd', this.start);
     }
 
 
 }
 
-class EventEmitter {
-    constructor() {
-        this.events = {};
-    }
+// class EventEmitter {
+//     constructor() {
+//         this.events = {};
+//     }
 
-    subscribe(eventName, fn) {
-        if (!this.events[eventName]) { //Если событие новое
-            this.events[eventName] = []; //Создать массив (который будет хранить подписавшиеся на событие функции)
-        }
-        this.events[eventName].push(fn); //Сохраням тело функции в массив с соотв названием события
-        //Возвращаем функцию, которая быстренько пробегается по массиву хранящихся функций, и оставляет только те, которые
-        //не являются текущей Т.е. переданная выше функция будет исключена из EvenEmitter'а
-        return () => {
-            this.events[eventName] = this.events[eventName].filter((eventFn) => fn !== eventFn);
-        }
-    }
+//     subscribe(eventName, fn) {
+//         if (!this.events[eventName]) { //Если событие новое
+//             this.events[eventName] = []; //Создать массив (который будет хранить подписавшиеся на событие функции)
+//         }
+//         this.events[eventName].push(fn); //Сохраням тело функции в массив с соотв названием события
+//         //Возвращаем функцию, которая быстренько пробегается по массиву хранящихся функций, и оставляет только те, которые
+//         //не являются текущей Т.е. переданная выше функция будет исключена из EvenEmitter'а
+//         return () => {
+//             this.events[eventName] = this.events[eventName].filter((eventFn) => fn !== eventFn);
+//         }
+//     }
 
-    //Более явный метод исключения функции из EvenEmitter'а
-    unsubscribe(eventName, fn) {
-        this.events[eventName] = this.events[eventName].filter((eventFn) => fn !== eventFn);
-    }
+//     //Более явный метод исключения функции из EvenEmitter'а
+//     unsubscribe(eventName, fn) {
+//         this.events[eventName] = this.events[eventName].filter((eventFn) => fn !== eventFn);
+//     }
 
-    emit(eventName, data) {
-        const event = this.events[eventName]; //Объект искомого события в event
-        if (event) { //Если такое свойство (объект) есть
-            event.forEach((fn) => { //Выполняем хранящиеся функции
-                // fn.call(null, data); //Линтер ругался на null
-                fn(data);
-            });
-        }
-    }
-}
+//     emit(eventName, data) {
+//         const event = this.events[eventName]; //Объект искомого события в event
+//         if (event) { //Если такое свойство (объект) есть
+//             event.forEach((fn) => { //Выполняем хранящиеся функции
+//                 // fn.call(null, data); //Линтер ругался на null
+//                 fn(data);
+//             });
+//         }
+//     }
+// }
 
 //=======================================================
 
-let emitter = new EventEmitter();
+// let emitter = new EventEmitter();
 let canvas = new Canvas(document.getElementsByTagName('canvas')[0]);
 //let matrix = new Matrix('[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,{"state":"fixed","color":1},null,null,null],[null,null,null,{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},null,null,null],[{"state":"fixed","color":1},null,{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},null,{"state":"fixed","color":3},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},null],[{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},null]]');
 let matrix = new Matrix();

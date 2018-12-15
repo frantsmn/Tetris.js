@@ -7,6 +7,8 @@
     <!-- main -->
     <link rel="stylesheet" href="font.css">
     <link rel="stylesheet" href="style.css">
+    <script src="emitter.js"></script>
+    <script src="header/header.js" defer></script>
     <!-- game -->
     <link rel="stylesheet" href="game/game.css">
     <link rel="stylesheet" href="game/panel.css">
@@ -20,25 +22,26 @@
 </head>
 
 <body>
-
-    <!-- <header> -->
     <!-- <H1>Tetris.js</H1> -->
     <!-- <p>Implementation of «NES Tetris» game using JavaScript</p> -->
-    <!-- </header> -->
+    <!-- <p>FM © 2018</p> -->
 
-    <!-- <main class="game competitive"> -->
-    <main class="game">
+    <header>
+        <div class="left">
+            <button class="neon">load</button>
+            <button class="neon">scores</button>
+            <button class="neon">about</button>
+        </div>
 
-        <!-- <section class="head">
-            <div class="window-buttons">
-                <button class="neon" id="FullScreenMode">Fullscreen</button>
-                <button class="neon">Sound off/on</button>
-            </div>
-            <div class="user-buttons">
-                <button class="neon">Log in</button>
-                <button class="neon">Register</button>
-            </div>
-        </section> -->
+        <div class="right">
+            <button id="ControllerToggler" class="neon toggler" title="Controller">+ oo</button>
+            <button id="SoundToggler" class="neon toggler on" title="Sound">{&#060;</button>
+            <button id="FullScreenToggler" class="neon toggler" title="Fullscreen">[]</button>
+        </div>
+    </header>
+
+    <main class="game competitive">
+    <!-- <main class="game"> -->
 
         <section class="players">
 
@@ -173,7 +176,7 @@
 
     </main>
 
-    <section id="controller">
+    <section id="controller" class="hidden">
         <div class="d-pad">
             <div class="sides">
                 <button id="button-left">◀</button>
@@ -192,41 +195,6 @@
         </div>
     </section>
 
-    <footer>
-        <!-- <p>FM © 2018</p> -->
-    </footer>
 </body>
-
-<script>
-    function toggleFullscreen(elem) {
-        elem = elem || document.documentElement;
-        if (!document.fullscreenElement && !document.mozFullScreenElement &&
-            !document.webkitFullscreenElement && !document.msFullscreenElement) {
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.msRequestFullscreen) {
-                elem.msRequestFullscreen();
-            } else if (elem.mozRequestFullScreen) {
-                elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) {
-                elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-            }
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            }
-        }
-    }
-
-    document.getElementById('FullScreenMode').addEventListener('click', function () {
-        toggleFullscreen();
-    });
-</script>
 
 </html>

@@ -1,7 +1,7 @@
 {
   "name": "tetris",
   "version": "1.0.0",
-  "description": "NESTetris.js",
+  "description": "Tetris.js",
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {

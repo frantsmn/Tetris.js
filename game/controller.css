@@ -79,9 +79,9 @@
 }
 
 #controller .buttons button.active {
-    border: solid 3px rgba(255, 0, 0, .2);
+    border: solid 3px rgba(255, 0, 0, 1);
     background-color: rgba(255, 0, 0, .5);
-    box-shadow: 0 0 20px 5px rgba(255, 0, 0, .5);
+    box-shadow: 0 0 10px 5px rgba(255, 0, 0, .5);
 }
 
 /* CROSS buttons */
@@ -98,9 +98,9 @@
 }
 
 #controller .d-pad button.active {
-    border: solid 3px rgba(255, 255, 255, .2);
+    border: solid 3px rgba(255, 255, 255, 1);
     background: rgba(255, 255, 255, .5);
-    box-shadow: 0 0 20px 5px rgba(255, 255, 255, .5);
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, .5);
 }
 
 #controller .d-pad #button-down {
@@ -129,16 +129,16 @@
 #controller .pause-wrap button {
     width: 80px;
     height: 25px;
-    border: solid 3px rgba(130, 130, 130, 1);
+    border: solid 3px rgba(130, 130, 130, 0.5);
     border-radius: 30px;
-    background-color: rgba(155, 155, 155, 1);
+    background-color: rgba(155, 155, 155, 0.5);
     color: rgba(0, 0, 0, 0.5);
     font-size: 15px;
     font-weight: bold;
 }
 
 #controller .pause-wrap button.active {
-    border: solid 3px rgba(255, 255, 255, .2);
-    background: rgba(255, 255, 255, .5);
-    box-shadow: 0 0 20px 5px rgba(255, 255, 255, .5);
+    border: solid 3px rgba(255, 255, 255, 1);
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.5);
 }
