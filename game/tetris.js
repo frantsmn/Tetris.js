@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 'use strict';
 
 class Matrix {
@@ -116,8 +117,8 @@ class Matrix {
         let fullLines = [];
         this.matrix.forEach((line, i) => {
             if (line.every((point) => {
-                    return point && point.state === 'fixed';
-                })) {
+                return point && point.state === 'fixed';
+            })) {
                 fullLines.push(i);
             }
         });
@@ -229,7 +230,7 @@ class Canvas {
 
     gameOverAnimation() {
         let context = this.context;
-        context.fillStyle = "rgba(0, 0, 0, .25)";
+        context.fillStyle = 'rgba(0, 0, 0, .25)';
         let n = 0
         let interval = setInterval(() => {
             for (let j = 0; j < 100; j++) {
@@ -737,7 +738,7 @@ class Stats {
         //Счетчик высоты падения блока
         let fallLinesCounter = 0;
         //Подсчет высоты падения блока с зажатой кнопкой вниз
-        EMITTER.subscribe("control:downPressed", (downPressed) => {
+        EMITTER.subscribe('control:downPressed', (downPressed) => {
             fallLinesCounter = downPressed ? fallLinesCounter + 1 : 0;
         });
         //Добавление к очкам высоты падения
@@ -819,6 +820,33 @@ class Stats {
 class Control {
     constructor(controller) {
 
+        let shiftRepeatInterval = 0;
+
+        this.stopListenKeyboard = function stopListenKeyboard() {
+
+            //Вне очереди очищаем рекурсивный таймаут
+            setTimeout(() => clearInterval(shiftRepeatInterval), 0);
+
+            document.removeEventListener('keydown', this.keydown);
+            document.removeEventListener('keyup', this.keyup);
+
+            controller.querySelectorAll('button').forEach((button) => {
+                button.removeEventListener('touchstart', this.keydown);
+                button.removeEventListener('touchend', this.keyup);
+            });
+        }
+
+        this.startListenKeyboard = function startListenKeyboard() {
+            this.key = {};
+            document.addEventListener('keydown', this.keydown);
+            document.addEventListener('keyup', this.keyup);
+
+            controller.querySelectorAll('button').forEach((button) => {
+                button.addEventListener('touchstart', this.keydown);
+                button.addEventListener('touchend', this.keyup);
+            });
+        }
+
         const voc = {
             68: 'B', //D
             70: 'A', //F
@@ -833,14 +861,16 @@ class Control {
         }
 
         this.key = {};
-        this.keydown = (e) => {
-            //Стили для нажатой тач-кнопки
-            e.srcElement.classList.add('active');
 
-            //Если такая кнопка уже нажата (избавляемся от системных повторов нажатия (система клацает сама, при зажатии клавиши))
-            if (this.key[e.keyCode]) return;
-            //Какая кнопка на калавиатуре нажата
-            this.key[e.keyCode] = true;
+        // var tick = () => {
+        //     console.log(this.key);
+        //     raf = requestAnimationFrame(tick);
+        // }
+        // var raf = requestAnimationFrame(tick);
+
+
+        this.keydown = (e) => {
+            // tick();
 
             switch (voc[e.keyCode || e.srcElement.id]) {
                 case 'B':
@@ -855,41 +885,56 @@ class Control {
                     break;
             }
 
-            clearInterval(this.shiftRepeatInterval);
-            clearTimeout(this.autoShiftDelay);
+            //Если это тач-событие
+            if (e.type === 'touchstart') {
+                //Применение стилей для нажатой тач-кнопки
+                e.srcElement.classList.add('active');
+            } else { //Если событие клавиатуры
+                //Если такая кнопка уже нажата, то избавляемся от системных повторов нажатия (система клацает сама, при зажатии клавиши)
+                if (this.key[e.keyCode]) return;
+                //Сохранить в свойство объекта key, какая кнопка на калавиатуре нажата
+                this.key[e.keyCode] = true;
+            }
 
             switch (voc[e.keyCode || e.srcElement.id]) {
                 case 'Right':
-                    e.preventDefault();
+                    clearInterval(shiftRepeatInterval);
                     block.activeBlock.moveRight();
-                    this.autoShiftDelay = setTimeout(() => {
-                        this.shiftRepeatInterval = setInterval(() => {
-                            block.activeBlock.moveRight();
-                        }, 80);
-                    }, 160);
+                    shiftRepeatInterval = setTimeout(function tick() {
+                        block.activeBlock.moveRight();
+                        //Рекурсивно вызываем таймаут
+                        shiftRepeatInterval = setTimeout(tick, 100);
+                    }, 267);
                     break;
                 case 'Left':
-                    e.preventDefault();
+                    clearInterval(shiftRepeatInterval);
                     block.activeBlock.moveLeft();
-                    this.autoShiftDelay = setTimeout(() => {
-                        this.shiftRepeatInterval = setInterval(() => {
-                            block.activeBlock.moveLeft();
-                        }, 80);
-                    }, 160);
+                    shiftRepeatInterval = setTimeout(function tick() {
+                        block.activeBlock.moveLeft();
+                        //Рекурсивно вызываем таймаут
+                        shiftRepeatInterval = setTimeout(tick, 100);
+                    }, 267);
                     break;
                 case 'Down':
-                    e.preventDefault();
-                    this.shiftRepeatInterval = setInterval(() => {
-                        block.activeBlock.moveDown()
-                        //Сообщаем о натой клавише вниз (необходимо для подсчета строк, за которые дропнется блок)
+                    clearInterval(shiftRepeatInterval);
+                    shiftRepeatInterval = setTimeout(function tick() {
+                        block.activeBlock.moveDown();
+                        //Сообщаем о нажатой клавише вниз (необходимо для подсчета строк, которые пролетит блок)
                         EMITTER.emit('control:downPressed', true);
-                    }, 50);
+                        //Рекурсивно вызываем таймаут
+                        shiftRepeatInterval = setTimeout(tick, 37);
+                    }, 0);
                     break;
                 default:
                     break;
             }
         }
+
         this.keyup = (e) => {
+            // raf = requestAnimationFrame(() => {
+            //     cancelAnimationFrame(raf);
+            // });
+
             //Стили для отпущенной тач-кнопки
             e.srcElement.classList.remove('active');
 
@@ -907,37 +952,17 @@ class Control {
                 default:
                     break;
             }
-            clearInterval(this.shiftRepeatInterval);
-            clearTimeout(this.autoShiftDelay);
+            clearInterval(shiftRepeatInterval);
         }
 
         this.startListenKeyboard(); //?
 
-        EMITTER.subscribe("canvas:wipeAnimationStart", () => this.stopListenKeyboard()); //Блокируем управление во время анимации
-        EMITTER.subscribe("block:gameOver", () => this.stopListenKeyboard()); //Блокируем управление по gameover
-        EMITTER.subscribe("canvas:wipeAnimationEnd", () => this.startListenKeyboard()); //Разблокируем управление после анимации
-    }
-
-    stopListenKeyboard() {
-        clearInterval(this.shiftRepeatInterval);
-        clearTimeout(this.autoShiftDelay);
-        document.removeEventListener('keydown', this.keydown);
-        document.removeEventListener('keyup', this.keyup);
-
-        controller.querySelectorAll('button').forEach((button) => {
-            button.removeEventListener('touchstart', this.keydown);
-            button.removeEventListener('touchend', this.keyup);
-        });
-    }
-
-    startListenKeyboard() {
-        this.key = {};
-        document.addEventListener('keydown', this.keydown);
-        document.addEventListener('keyup', this.keyup);
-
-        controller.querySelectorAll('button').forEach((button) => {
-            button.addEventListener('touchstart', this.keydown);
-            button.addEventListener('touchend', this.keyup);
+        EMITTER.subscribe('canvas:wipeAnimationStart', () => this.stopListenKeyboard()); //Блокируем управление во время анимации
+        EMITTER.subscribe('canvas:wipeAnimationEnd', () => this.startListenKeyboard()); //Разблокируем управление после анимации
+        EMITTER.subscribe('block:gameOver', () => this.stopListenKeyboard()); //Блокируем управление по gameover
+        EMITTER.subscribe('block:blockFixed', () => {
+            //Вне очереди очищаем рекурсивный таймаут
+            setTimeout(() => clearInterval(shiftRepeatInterval), 0);
         });
     }
 }
@@ -973,44 +998,10 @@ class Ticker {
 
 }
 
-// class EventEmitter {
-//     constructor() {
-//         this.events = {};
-//     }
-
-//     subscribe(eventName, fn) {
-//         if (!this.events[eventName]) { //Если событие новое
-//             this.events[eventName] = []; //Создать массив (который будет хранить подписавшиеся на событие функции)
-//         }
-//         this.events[eventName].push(fn); //Сохраням тело функции в массив с соотв названием события
-//         //Возвращаем функцию, которая быстренько пробегается по массиву хранящихся функций, и оставляет только те, которые
-//         //не являются текущей Т.е. переданная выше функция будет исключена из EvenEmitter'а
-//         return () => {
-//             this.events[eventName] = this.events[eventName].filter((eventFn) => fn !== eventFn);
-//         }
-//     }
-
-//     //Более явный метод исключения функции из EvenEmitter'а
-//     unsubscribe(eventName, fn) {
-//         this.events[eventName] = this.events[eventName].filter((eventFn) => fn !== eventFn);
-//     }
-
-//     emit(eventName, data) {
-//         const event = this.events[eventName]; //Объект искомого события в event
-//         if (event) { //Если такое свойство (объект) есть
-//             event.forEach((fn) => { //Выполняем хранящиеся функции
-//                 // fn.call(null, data); //Линтер ругался на null
-//                 fn(data);
-//             });
-//         }
-//     }
-// }
-
 //=======================================================
 
-// let emitter = new EventEmitter();
 let canvas = new Canvas(document.getElementsByTagName('canvas')[0]);
-//let matrix = new Matrix('[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,{"state":"fixed","color":1},null,null,null],[null,null,null,{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},null,null,null],[{"state":"fixed","color":1},null,{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},null,{"state":"fixed","color":3},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},null],[{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},null]]');
+// let matrix = new Matrix('[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{'state':'fixed','color':2},{'state':'fixed','color':2},null,null,null,null,null],[null,null,null,{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},null,null,null,null],[null,null,null,{'state':'fixed','color':2},{'state':'fixed','color':2},null,{'state':'fixed','color':1},null,null,null],[null,null,null,{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':1},{'state':'fixed','color':1},null,null,null],[{'state':'fixed','color':1},null,{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':1},null,{'state':'fixed','color':3},null],[{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':3},{'state':'fixed','color':3},null],[{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},null],[{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':2},{'state':'fixed','color':2},null],[{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':3},{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':1},null],[{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':1},{'state':'fixed','color':2},null],[{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':2},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},null],[{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},null]]');
 let matrix = new Matrix();
 let block = new Block();
 let stats = new Stats(document.getElementsByClassName('game')[0]);
