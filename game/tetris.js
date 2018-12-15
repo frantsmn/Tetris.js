@@ -68,22 +68,17 @@ class Matrix {
 
             //Игноровать точки, которые выше стакана и внутри левой и правой границы
             if (y + points[i].y < 0 && x + points[i].x >= 0 && x + points[i].x <= 9) {
-                console.log('point ' + i + ' = continiue', block.activeBlockId, block.activeBlock.name);
                 continue;
                 //Точка внутри стакана
             } else if (y + points[i].y <= 19 && x + points[i].x >= 0 && x + points[i].x <= 9) {
-                console.log('point ' + i + ' = точка внутри стакана', block.activeBlockId, block.activeBlock.name);
                 //Точка не накладывается на закрепленную точку
                 if (this.matrix[y + points[i].y][x + points[i].x] !== null && this.matrix[y + points[i].y][x + points[i].x].state === 'fixed') {
-                    console.log('point ' + i + ' = точка накладывается на закрепленную точку', this.matrix[y + points[i].y][x + points[i].x].state, block.activeBlockId, block.activeBlock.name);
                     return false;
                 }
             } else {
-                console.log('point ' + i + ' = точка не внутри стакана', block.activeBlockId, block.activeBlock.name);
                 return false;
             }
         }
-        console.log('point ', ' = все ок', block.activeBlockId, block.activeBlock.name);
         return true;
     }
 
@@ -140,14 +135,56 @@ class Matrix {
 class Textures {
     constructor() {
 
-        this[1] = new Image();
-        this[2] = new Image();
-        this[3] = new Image();
+        //Формирование списка текстур и картинок
+        this.resources = [];
+        for (let level = 0; level <= 9; level++) {
+            this.resources.push(`/game/svg/textures/level_${level}/type_1.svg`);
+            this.resources.push(`/game/svg/textures/level_${level}/type_2.svg`);
+            this.resources.push(`/game/svg/textures/level_${level}/type_3.svg`);
+            this.resources.push(`/game/svg/blocks/level_${level}/i-block.svg`);
+            this.resources.push(`/game/svg/blocks/level_${level}/j-block.svg`);
+            this.resources.push(`/game/svg/blocks/level_${level}/l-block.svg`);
+            this.resources.push(`/game/svg/blocks/level_${level}/o-block.svg`);
+            this.resources.push(`/game/svg/blocks/level_${level}/s-block.svg`);
+            this.resources.push(`/game/svg/blocks/level_${level}/t-block.svg`);
+            this.resources.push(`/game/svg/blocks/level_${level}/z-block.svg`);
+        }
 
-        this.level = 0;
+        //Предзагрузка картинок
+        preloadImages(this.resources, () => {
+            this[1] = new Image();
+            this[2] = new Image();
+            this[3] = new Image();
+
+            this.level = 0;
+
+            // console.log('All pictures has been preloaded!');
+
+            EMITTER.emit('textures:ready');
+        });
+
+        function preloadImages(sources, func) {
+            let counter = 0;
+
+            function onLoad() {
+                counter++;
+                if (counter === sources.length) {
+
+
+                    func();
+                }
+            }
+
+            for (let i = 0; i < sources.length; i++) {
+                let img = document.createElement('img');
+                //Cначала onload/onerror, затем src - важно для IE8-
+                img.onload = img.onerror = onLoad;
+                img.src = sources[i];
+            }
+        }
 
         EMITTER.subscribe('stats:newLevel', (level) => {
-            this.level = level % 10;
+            this.level = level % 10; //Нужен только остаток, т.к. текстур 10, а уровней 20
         });
     }
 
@@ -165,9 +202,6 @@ class Textures {
 
 class Canvas {
     constructor(element) {
-
-        const aspectRatio = 2; // height:width = 2:1
-        element.style.height = getComputedStyle(element).width * aspectRatio;
         this.context = element.getContext('2d');
     }
 
@@ -193,7 +227,7 @@ class Canvas {
         context.fillStyle = color;
         for (let i = 0; i < points.length; i++) {
             //Color
-            context.fillRect((points[i].x + xPos) * 20, (points[i].y + yPos) * 20, 20, 20);
+            // context.fillRect((points[i].x + xPos) * 20, (points[i].y + yPos) * 20, 20, 20);
             //Texture
             context.drawImage(textures[color], (points[i].x + xPos) * 20, (points[i].y + yPos) * 20, 20, 20);
         }
@@ -301,6 +335,10 @@ class Block {
                         checkPlaceForNextBlock();
                     }
                 }
+
+                //  Функция проверяет возможность размещения на поле следующего блока.
+                //  Если блок появляется над занятыми точками (координатами),
+                //  то инициализируется событие GameOver, анимация и пр.
 
                 function checkPlaceForNextBlock() {
                     //Если следующий блок будет над занятыми точками
@@ -927,12 +965,16 @@ class Control {
                 case 'Down':
                     //Сообщаем об отпущенной клавише "down" (необходимо для подсчета строк, за которые дропнется блок)
                     EMITTER.emit('control:downPressed', false);
+                    //Очищаем интервал
+                    setTimeout(() => clearTimeout(downRepeatTimeoutID), 0);
+                    break;
+                case 'Left':
+                case 'Right':
+                    setTimeout(() => clearTimeout(shiftRepeatTimeoutID), 0);
                     break;
                 default:
                     break;
             }
-            clearTimeout(shiftRepeatTimeoutID);
-            clearTimeout(downRepeatTimeoutID);
         }
 
         this.startListenKeyboard(); //?
@@ -975,28 +1017,29 @@ class Ticker {
         EMITTER.subscribe('canvas:wipeAnimationStart', this.stop);
         EMITTER.subscribe('canvas:wipeAnimationEnd', this.start);
     }
-
-
 }
 
 //=======================================================
 
+
 let textures = new Textures();
 let canvas = new Canvas(document.getElementsByTagName('canvas')[0]);
-let matrix = new Matrix('[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,{"state":"fixed","color":1},null,null,null],[null,null,null,{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},null,null,null],[{"state":"fixed","color":1},null,{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},null,{"state":"fixed","color":3},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},null],[{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},null]]');
-// let matrix = new Matrix();
+//let matrix = new Matrix('[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,{"state":"fixed","color":1},null,null,null],[null,null,null,{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},null,null,null],[{"state":"fixed","color":1},null,{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},null,{"state":"fixed","color":3},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},null],[{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},null]]');
+let matrix = new Matrix();
 let block = new Block();
 let stats = new Stats(document.getElementsByClassName('game')[0]);
 let control = new Control(document.getElementById('controller'));
 let ticker = new Ticker();
 
-/* ??? */
-setTimeout(() => {
+EMITTER.subscribe('textures:ready', () => {
+    initGame();
+});
+
+function initGame() {
     canvas.drawState(matrix.getFixedMatrix());
     block.activeBlock.drawBlock();
-}, 500);
-
-/* ??? */
+    ticker.start();
+}
 
 // function Game() {
 //     this.saveGame = function () {
