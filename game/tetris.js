@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+
 'use strict';
 
 class Matrix {
@@ -65,21 +66,24 @@ class Matrix {
     checkPointsIsEmpty(x, y, points) {
         for (let i = 0; i < points.length; i++) {
 
-            //Игноровать точки, которые выше стакана
-            if (y + points[i].y < 0) {
+            //Игноровать точки, которые выше стакана и внутри левой и правой границы
+            if (y + points[i].y < 0 && x + points[i].x >= 0 && x + points[i].x <= 9) {
+                console.log('point ' + i + ' = continiue', block.activeBlockId, block.activeBlock.name);
                 continue;
-            }
-
-            //Точка внутри стакана
-            if (y + points[i].y <= 19 && x + points[i].x >= 0 && x + points[i].x <= 9) {
+                //Точка внутри стакана
+            } else if (y + points[i].y <= 19 && x + points[i].x >= 0 && x + points[i].x <= 9) {
+                console.log('point ' + i + ' = точка внутри стакана', block.activeBlockId, block.activeBlock.name);
                 //Точка не накладывается на закрепленную точку
                 if (this.matrix[y + points[i].y][x + points[i].x] !== null && this.matrix[y + points[i].y][x + points[i].x].state === 'fixed') {
+                    console.log('point ' + i + ' = точка накладывается на закрепленную точку', this.matrix[y + points[i].y][x + points[i].x].state, block.activeBlockId, block.activeBlock.name);
                     return false;
                 }
             } else {
+                console.log('point ' + i + ' = точка не внутри стакана', block.activeBlockId, block.activeBlock.name);
                 return false;
             }
         }
+        console.log('point ', ' = все ок', block.activeBlockId, block.activeBlock.name);
         return true;
     }
 
@@ -241,7 +245,7 @@ class Canvas {
                     // console.log(i);
                 }
             }
-            console.log('n ------------------> ', n);
+            // console.log('n ------------------> ', n);
             if (n >= 6) {
                 clearInterval(interval);
                 return; //callback();
@@ -269,6 +273,10 @@ class Block {
         this.activeBlockId = 0;
         this.activeBlock = this.createBlock[this.queue[this.activeBlockId]]();
         this.nextBlock = this.createBlock[this.queue[this.activeBlockId + 1]]();
+        this.goToNextBlock = () => {
+            this.activeBlock = this.nextBlock;
+            this.nextBlock = this.createBlock[this.queue[++this.activeBlockId]]();
+        }
 
         function BlockMovements() {
 
@@ -278,40 +286,40 @@ class Block {
                     this.position.y++;
                     drawBlock();
                 } else {
-                    //Если блок у верхней границы
-                    if (this.position.y === 0) {
-                        drawBlock();
-                        //Сообщаем что gameover
-                        EMITTER.emit('block:gameOver');
-                        //Анимация gameOver
-                        canvas.gameOverAnimation();
-                    }
+                    //Сообщаем что блок упал
+                    EMITTER.emit('block:blockFixed');
                     //Закрепить точки
                     matrix.fixPoints(this.position.x, this.position.y, this.pointsSet[this.rotation.state - 1]);
 
-                    //Сообщаем что блок упал
-                    EMITTER.emit('block:blockFixed');
-
                     //Если есть заполненные линии
                     if (matrix.getFullLines().length) {
-
-                        //Считаем статистику
+                        //Добавить линии в статистику
                         stats.addLines(matrix.getFullLines().length);
-                        //Анимирование стирания линий
-                        canvas.wipeLinesAnimation(matrix.getFullLines(), () => {
-                            //Переходим к следующему блоку
-                            block.goToNextBlock();
-                            block.activeBlock.drawBlock();
-                            stats.refresh();
-                        });
+                        //Анимировать стирание линий: Canvas.wipeLinesAnimation(array[], callback());
+                        canvas.wipeLinesAnimation(matrix.getFullLines(), checkPlaceForNextBlock);
                     } else {
-                        //Переходим к следующему блоку
+                        checkPlaceForNextBlock();
+                    }
+                }
+
+                function checkPlaceForNextBlock() {
+                    //Если следующий блок будет над занятыми точками
+                    if (matrix.checkPointsIsEmpty(block.nextBlock.position.x, block.nextBlock.position.y, block.nextBlock.pointsSet[block.nextBlock.rotation.state - 1]) === false) {
+                        block.goToNextBlock();
+                        block.activeBlock.drawBlock();
+                        stats.refresh();
+                        //Сообщить о gameover
+                        EMITTER.emit('block:gameOver');
+                        //Воспроизвести анимацию gameOver
+                        canvas.gameOverAnimation();
+                    } else {
                         block.goToNextBlock();
                         block.activeBlock.drawBlock();
                         stats.refresh();
                     }
                 }
-            };
+            }
+
             this.moveLeft = function () {
                 if (matrix.checkPointsIsEmpty(this.position.x - 1, this.position.y, this.pointsSet[this.rotation.state - 1])) {
                     eraseBlock();
@@ -711,11 +719,6 @@ class Block {
             ];
         }
     }
-
-    goToNextBlock() {
-        this.activeBlock = this.nextBlock;
-        this.nextBlock = this.createBlock[this.queue[++this.activeBlockId]]();
-    }
 }
 
 class Stats {
@@ -820,33 +823,13 @@ class Stats {
 class Control {
     constructor(controller) {
 
-        let shiftRepeatInterval = 0;
-
-        this.stopListenKeyboard = function stopListenKeyboard() {
-
-            //Вне очереди очищаем рекурсивный таймаут
-            setTimeout(() => clearInterval(shiftRepeatInterval), 0);
-
-            document.removeEventListener('keydown', this.keydown);
-            document.removeEventListener('keyup', this.keyup);
-
-            controller.querySelectorAll('button').forEach((button) => {
-                button.removeEventListener('touchstart', this.keydown);
-                button.removeEventListener('touchend', this.keyup);
-            });
-        }
-
-        this.startListenKeyboard = function startListenKeyboard() {
-            this.key = {};
-            document.addEventListener('keydown', this.keydown);
-            document.addEventListener('keyup', this.keyup);
-
-            controller.querySelectorAll('button').forEach((button) => {
-                button.addEventListener('touchstart', this.keydown);
-                button.addEventListener('touchend', this.keyup);
-            });
-        }
-
+        //ID таймаута для повторений движения влево/вправо блока, при зажатой кнопке
+        let shiftRepeatTimeoutID = 0;
+        //ID таймаута для повторений движения вниз блока, при зажатой кнопке
+        let downRepeatTimeoutID = 0;
+        //Объект с инф. о нажатых кнопках
+        this.key = {};
+        //Словарь соответствия нажатых клавиш действиям
         const voc = {
             68: 'B', //D
             70: 'A', //F
@@ -860,32 +843,26 @@ class Control {
             'button-down': 'Down'
         }
 
-        this.key = {};
+        this.stopListenKeyboard = function stopListenKeyboard() {
+            document.removeEventListener('keydown', this.keydown);
+            document.removeEventListener('keyup', this.keyup);
+            controller.querySelectorAll('button').forEach((button) => {
+                button.removeEventListener('touchstart', this.keydown);
+                button.removeEventListener('touchend', this.keyup);
+            });
+        }
 
-        // var tick = () => {
-        //     console.log(this.key);
-        //     raf = requestAnimationFrame(tick);
-        // }
-        // var raf = requestAnimationFrame(tick);
-
+        this.startListenKeyboard = function startListenKeyboard() {
+            document.addEventListener('keydown', this.keydown);
+            document.addEventListener('keyup', this.keyup);
+            controller.querySelectorAll('button').forEach((button) => {
+                button.addEventListener('touchstart', this.keydown);
+                button.addEventListener('touchend', this.keyup);
+            });
+        }
 
         this.keydown = (e) => {
-            // tick();
-
-            switch (voc[e.keyCode || e.srcElement.id]) {
-                case 'B':
-                    e.preventDefault();
-                    block.activeBlock.rotateLeft();
-                    return;
-                case 'A':
-                    e.preventDefault();
-                    block.activeBlock.rotateRight();
-                    return;
-                default:
-                    break;
-            }
-
-            //Если это тач-событие
+            //Если тач-событие
             if (e.type === 'touchstart') {
                 //Применение стилей для нажатой тач-кнопки
                 e.srcElement.classList.add('active');
@@ -895,34 +872,40 @@ class Control {
                 //Сохранить в свойство объекта key, какая кнопка на калавиатуре нажата
                 this.key[e.keyCode] = true;
             }
-
             switch (voc[e.keyCode || e.srcElement.id]) {
+                case 'B':
+                    e.preventDefault();
+                    block.activeBlock.rotateLeft();
+                    return;
+                case 'A':
+                    e.preventDefault();
+                    block.activeBlock.rotateRight();
+                    return;
                 case 'Right':
-                    clearInterval(shiftRepeatInterval);
+                    clearTimeout(shiftRepeatTimeoutID);
                     block.activeBlock.moveRight();
-                    shiftRepeatInterval = setTimeout(function tick() {
+                    shiftRepeatTimeoutID = setTimeout(function tick() {
                         block.activeBlock.moveRight();
                         //Рекурсивно вызываем таймаут
-                        shiftRepeatInterval = setTimeout(tick, 100);
+                        shiftRepeatTimeoutID = setTimeout(tick, 100);
                     }, 267);
                     break;
                 case 'Left':
-                    clearInterval(shiftRepeatInterval);
+                    clearTimeout(shiftRepeatTimeoutID);
                     block.activeBlock.moveLeft();
-                    shiftRepeatInterval = setTimeout(function tick() {
+                    shiftRepeatTimeoutID = setTimeout(function tick() {
                         block.activeBlock.moveLeft();
                         //Рекурсивно вызываем таймаут
-                        shiftRepeatInterval = setTimeout(tick, 100);
+                        shiftRepeatTimeoutID = setTimeout(tick, 100);
                     }, 267);
                     break;
                 case 'Down':
-                    clearInterval(shiftRepeatInterval);
-                    shiftRepeatInterval = setTimeout(function tick() {
+                    downRepeatTimeoutID = setTimeout(function tick() {
                         block.activeBlock.moveDown();
                         //Сообщаем о нажатой клавише вниз (необходимо для подсчета строк, которые пролетит блок)
                         EMITTER.emit('control:downPressed', true);
                         //Рекурсивно вызываем таймаут
-                        shiftRepeatInterval = setTimeout(tick, 37);
+                        downRepeatTimeoutID = setTimeout(tick, 37);
                     }, 0);
                     break;
                 default:
@@ -931,10 +914,6 @@ class Control {
         }
 
         this.keyup = (e) => {
-            // raf = requestAnimationFrame(() => {
-            //     cancelAnimationFrame(raf);
-            // });
-
             //Стили для отпущенной тач-кнопки
             e.srcElement.classList.remove('active');
 
@@ -946,13 +925,14 @@ class Control {
                 case 'A':
                     return;
                 case 'Down':
-                    //Сообщаем об отпущенной клавише вниз (необходимо для подсчета строк, за которые дропнется блок)
+                    //Сообщаем об отпущенной клавише "down" (необходимо для подсчета строк, за которые дропнется блок)
                     EMITTER.emit('control:downPressed', false);
                     break;
                 default:
                     break;
             }
-            clearInterval(shiftRepeatInterval);
+            clearTimeout(shiftRepeatTimeoutID);
+            clearTimeout(downRepeatTimeoutID);
         }
 
         this.startListenKeyboard(); //?
@@ -961,8 +941,9 @@ class Control {
         EMITTER.subscribe('canvas:wipeAnimationEnd', () => this.startListenKeyboard()); //Разблокируем управление после анимации
         EMITTER.subscribe('block:gameOver', () => this.stopListenKeyboard()); //Блокируем управление по gameover
         EMITTER.subscribe('block:blockFixed', () => {
-            //Вне очереди очищаем рекурсивный таймаут
-            setTimeout(() => clearInterval(shiftRepeatInterval), 0);
+            this.button = {};
+            //Вне очереди очищаем рекурсивный таймаут на повтор движения вниз
+            setTimeout(() => clearTimeout(downRepeatTimeoutID), 0);
         });
     }
 }
@@ -1000,13 +981,13 @@ class Ticker {
 
 //=======================================================
 
+let textures = new Textures();
 let canvas = new Canvas(document.getElementsByTagName('canvas')[0]);
-// let matrix = new Matrix('[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{'state':'fixed','color':2},{'state':'fixed','color':2},null,null,null,null,null],[null,null,null,{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},null,null,null,null],[null,null,null,{'state':'fixed','color':2},{'state':'fixed','color':2},null,{'state':'fixed','color':1},null,null,null],[null,null,null,{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':1},{'state':'fixed','color':1},null,null,null],[{'state':'fixed','color':1},null,{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':1},null,{'state':'fixed','color':3},null],[{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':3},{'state':'fixed','color':3},null],[{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},null],[{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':2},{'state':'fixed','color':2},null],[{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':3},{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':1},null],[{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':1},{'state':'fixed','color':2},null],[{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':2},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},null],[{'state':'fixed','color':1},{'state':'fixed','color':1},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':2},{'state':'fixed','color':3},{'state':'fixed','color':3},{'state':'fixed','color':2},{'state':'fixed','color':2},null]]');
-let matrix = new Matrix();
+let matrix = new Matrix('[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,{"state":"fixed","color":1},null,null,null],[null,null,null,{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},null,null,null],[{"state":"fixed","color":1},null,{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},null,{"state":"fixed","color":3},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},null],[{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},null]]');
+// let matrix = new Matrix();
 let block = new Block();
 let stats = new Stats(document.getElementsByClassName('game')[0]);
 let control = new Control(document.getElementById('controller'));
-let textures = new Textures();
 let ticker = new Ticker();
 
 /* ??? */
