@@ -1058,12 +1058,6 @@ class Ticker {
         this.delay = [800, 717, 633, 550, 467, 383, 300, 217, 133, 100, 83, 83, 83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 17];
         this.setInterval = null;
 
-        EMITTER.subscribe('stats:newLevel', (level) => {
-            this.actualLevel = level;
-            setTimeout(clearInterval(this.setInterval), 0);
-            this.start(this.actualLevel);
-        });
-
         this.start = (level = this.actualLevel) => {
             // console.log('...>', level);
             this.setInterval = setInterval(() => {
@@ -1083,9 +1077,15 @@ class Ticker {
 
         EMITTER.subscribe('block:gameOver', this.stop);
 
-        //Запускается пауза и таймер дважды, если происходят оба события
+        //TODO:
+        //Запускается пауза и таймер ТРИЖДЫ, если происходят все события одновременно
         EMITTER.subscribe('block:blockFixed', () => this.pause(2000), 0); //this.delay[this.actualLevel]
         EMITTER.subscribe('canvas:wipeAnimationStart', () => this.pause(2000), 0);
+        EMITTER.subscribe('stats:newLevel', (level) => {
+            this.actualLevel = level;
+            setTimeout(clearInterval(this.setInterval), 0);
+            this.start(this.actualLevel);
+        });
         // EMITTER.subscribe('canvas:wipeAnimationEnd', this.start);
     }
 
