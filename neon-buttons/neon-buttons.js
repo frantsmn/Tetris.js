@@ -10,7 +10,6 @@ function neon(element) {
     };
     let interval;
     let fx = new Audio('/neon-buttons/btn.wav');
-    fx.volume = 0.1;
 
     element.addEventListener('mouseenter', start);
     element.addEventListener('mousemove', checkCursor);

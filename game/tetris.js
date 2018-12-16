@@ -134,6 +134,7 @@ class Matrix {
 
 class Textures {
     constructor() {
+        this.images = [];
 
         //Формирование списка текстур и картинок
         this.resources = [];
@@ -150,27 +151,12 @@ class Textures {
             this.resources.push(`/game/svg/blocks/level_${level}/z-block.svg`);
         }
 
-        //Предзагрузка картинок
-        preloadImages(this.resources, () => {
-            this[1] = new Image();
-            this[2] = new Image();
-            this[3] = new Image();
-
-            this.level = 0;
-
-            // console.log('All pictures has been preloaded!');
-
-            EMITTER.emit('textures:ready');
-        });
-
-        function preloadImages(sources, func) {
+        this.preloadImages = (sources, func) => {
             let counter = 0;
 
             function onLoad() {
                 counter++;
                 if (counter === sources.length) {
-
-
                     func();
                 }
             }
@@ -180,8 +166,21 @@ class Textures {
                 //Cначала onload/onerror, затем src - важно для IE8-
                 img.onload = img.onerror = onLoad;
                 img.src = sources[i];
+                this.images.push(img);
             }
         }
+
+        //Предзагрузка картинок
+        this.preloadImages(this.resources, () => {
+            this[1] = new Image();
+            this[2] = new Image();
+            this[3] = new Image();
+
+            this.level = 0;
+
+            // console.log('All pictures has been preloaded!');
+            EMITTER.emit('textures:ready');
+        });
 
         EMITTER.subscribe('stats:newLevel', (level) => {
             this.level = level % 10; //Нужен только остаток, т.к. текстур 10, а уровней 20
@@ -197,6 +196,47 @@ class Textures {
 
     get level() {
         return this._level;
+    }
+}
+
+class Sounds {
+    constructor() {
+
+        let sound = new Audio();
+
+        //Cписок ресурсов
+        this.resources = ['land', 'move', 'rotate', 'clearline', 'tetris', 'gameover', 'levelup', 'pause', 'option'];
+
+        this.preloadSounds = (sources, func) => {
+            let counter = 0;
+
+            function onLoad() {
+                counter++;
+                if (counter === sources.length) {
+                    func();
+                }
+            }
+
+            for (let i = 0; i < sources.length; i++) {
+                this[sources[i]] = new Audio();
+                this[sources[i]].src = `/game/sounds/${sources[i]}.mp3`;
+                this[sources[i]].onload = this[sources[i]].onerror = onLoad;
+            }
+        }
+
+        this.play = (name) => {
+            if (document.PLAY_SOUND) {
+                this[name].currentTime = 0;
+                this[name].play();
+            }
+        }
+
+        //Предзагрузка звуков
+        this.preloadSounds(this.resources, () => {
+            // console.log('All sounds has been preloaded!');
+            EMITTER.emit('sounds:ready');
+        });
+
     }
 }
 
@@ -257,13 +297,13 @@ class Canvas {
                 clearInterval(interval);
                 matrix.removeFullLines();
                 canvas.drawState(matrix.getFixedMatrix());
-
+                callback();
                 //Трансляция события окончания анимации
                 EMITTER.emit('canvas:wipeAnimationEnd');
-
-                return callback();
+                return;
             }
         }, 60);
+
     }
 
     gameOverAnimation() {
@@ -320,8 +360,10 @@ class Block {
                     this.position.y++;
                     drawBlock();
                 } else {
-                    //Сообщаем что блок упал
+                    //Сообщить что блок упал
                     EMITTER.emit('block:blockFixed');
+                    //Воспроизвести звук
+                    sounds.play('land');
                     //Закрепить точки
                     matrix.fixPoints(this.position.x, this.position.y, this.pointsSet[this.rotation.state - 1]);
 
@@ -350,6 +392,8 @@ class Block {
                         EMITTER.emit('block:gameOver');
                         //Воспроизвести анимацию gameOver
                         canvas.gameOverAnimation();
+                        //Воспроизвести звук
+                        sounds.play('gameover');
                     } else {
                         block.goToNextBlock();
                         block.activeBlock.drawBlock();
@@ -363,6 +407,7 @@ class Block {
                     eraseBlock();
                     this.position.x--;
                     drawBlock();
+                    sounds.play('move');
                 }
             };
             this.moveRight = function () {
@@ -370,6 +415,7 @@ class Block {
                     eraseBlock();
                     this.position.x++;
                     drawBlock();
+                    sounds.play('move');
                 }
             };
             this.rotateRight = function () {
@@ -378,6 +424,7 @@ class Block {
                     eraseBlock();
                     this.rotation.state = newState;
                     drawBlock();
+                    sounds.play('rotate');
                 }
             }
             this.rotateLeft = function () {
@@ -386,6 +433,7 @@ class Block {
                     eraseBlock();
                     this.rotation.state = newState;
                     drawBlock();
+                    sounds.play('rotate');
                 }
             }
             let drawBlock = this.drawBlock = () => {
@@ -791,9 +839,14 @@ class Stats {
     }
 
     addLines(n) {
+
+        // Эффекты
         //Если 4 линии, то анимируем
         if (n === 4) {
             this.blinkAnimation();
+            sounds.play('tetris');
+        } else {
+            sounds.play('clearline');
         }
 
         this.lines += n;
@@ -801,6 +854,7 @@ class Stats {
         if (this.level < Math.floor(this.lines / 10)) {
             this.level = Math.floor(this.lines / 10);
             EMITTER.emit('stats:newLevel', this.level);
+            sounds.play('levelup');
         }
         switch (n) {
             case 1:
@@ -900,27 +954,25 @@ class Control {
         }
 
         this.keydown = (e) => {
-            //Если тач-событие
-            if (e.type === 'touchstart') {
-                //Применение стилей для нажатой тач-кнопки
-                e.srcElement.classList.add('active');
-            } else { //Если событие клавиатуры
-                //Если такая кнопка уже нажата, то избавляемся от системных повторов нажатия (система клацает сама, при зажатии клавиши)
-                if (this.key[e.keyCode]) return;
-                //Сохранить в свойство объекта key, какая кнопка на калавиатуре нажата
-                this.key[e.keyCode] = true;
-            }
+
+            //Если такая кнопка уже нажата, то избавляемся от системных повторов нажатия (система клацает сама, при зажатии клавиши)
+            if (this.key[voc[e.keyCode || e.srcElement.id]]) return;
+            //Сохранить в свойство объекта key, какая кнопка на калавиатуре нажата
+            this.key[voc[e.keyCode || e.srcElement.id]] = true;
+            //Применение стилей для нажатой тач-кнопки
+            e.srcElement.classList.add('active');
+
+            // console.log('keydown: this.key = ', this.key, ' code: ', e.keyCode);
+
             switch (voc[e.keyCode || e.srcElement.id]) {
                 case 'B':
-                    e.preventDefault();
                     block.activeBlock.rotateLeft();
                     return;
                 case 'A':
-                    e.preventDefault();
                     block.activeBlock.rotateRight();
                     return;
                 case 'Right':
-                    clearTimeout(shiftRepeatTimeoutID);
+                    clearTimeout(shiftRepeatTimeoutID); //Обнуляем повторы нажатия чтобы не возникал кнфликт при одновременном нажатии
                     block.activeBlock.moveRight();
                     shiftRepeatTimeoutID = setTimeout(function tick() {
                         block.activeBlock.moveRight();
@@ -929,7 +981,7 @@ class Control {
                     }, 267);
                     break;
                 case 'Left':
-                    clearTimeout(shiftRepeatTimeoutID);
+                    clearTimeout(shiftRepeatTimeoutID); //Обнуляем повторы нажатия чтобы не возникал кнфликт при одновременном нажатии
                     block.activeBlock.moveLeft();
                     shiftRepeatTimeoutID = setTimeout(function tick() {
                         block.activeBlock.moveLeft();
@@ -938,6 +990,7 @@ class Control {
                     }, 267);
                     break;
                 case 'Down':
+                    clearTimeout(shiftRepeatTimeoutID);
                     downRepeatTimeoutID = setTimeout(function tick() {
                         block.activeBlock.moveDown();
                         //Сообщаем о нажатой клавише вниз (необходимо для подсчета строк, которые пролетит блок)
@@ -952,10 +1005,11 @@ class Control {
         }
 
         this.keyup = (e) => {
+
             //Стили для отпущенной тач-кнопки
             e.srcElement.classList.remove('active');
 
-            delete this.key[e.keyCode];
+            setTimeout(delete this.key[voc[e.keyCode || e.srcElement.id]], 0);
             //Если были нажаты кнопки поворота, то не стоит сбрасывать интервалы повтора перемещний,
             //иначе движение фигуры по зажатой кнопке (влево/вправо), прекратится
             switch (voc[e.keyCode || e.srcElement.id]) {
@@ -966,31 +1020,39 @@ class Control {
                     //Сообщаем об отпущенной клавише "down" (необходимо для подсчета строк, за которые дропнется блок)
                     EMITTER.emit('control:downPressed', false);
                     //Очищаем интервал
-                    setTimeout(() => clearTimeout(downRepeatTimeoutID), 0);
+                    setTimeout(clearTimeout(downRepeatTimeoutID), 0);
                     break;
                 case 'Left':
                 case 'Right':
-                    setTimeout(() => clearTimeout(shiftRepeatTimeoutID), 0);
+                    setTimeout(clearTimeout(shiftRepeatTimeoutID), 0);
                     break;
                 default:
                     break;
             }
+            this.key = {};
+            // console.log('keyup: this.key = ', this.key);
         }
 
         this.startListenKeyboard(); //?
 
         EMITTER.subscribe('canvas:wipeAnimationStart', () => this.stopListenKeyboard()); //Блокируем управление во время анимации
         EMITTER.subscribe('canvas:wipeAnimationEnd', () => this.startListenKeyboard()); //Разблокируем управление после анимации
-        EMITTER.subscribe('block:gameOver', () => this.stopListenKeyboard()); //Блокируем управление по gameover
+        EMITTER.subscribe('block:gameOver', () => {
+            //Блокируем управление по gameover
+            this.stopListenKeyboard();
+            //Вне очереди очищаем рекурсивный таймаут на повтор движения в стороны
+            setTimeout(() => clearTimeout(shiftRepeatTimeoutID), 0);
+        });
         EMITTER.subscribe('block:blockFixed', () => {
-            this.button = {};
             //Вне очереди очищаем рекурсивный таймаут на повтор движения вниз
+            //Таким образом запрещаем блоку сразу падать после появления
             setTimeout(() => clearTimeout(downRepeatTimeoutID), 0);
         });
     }
 }
 
 class Ticker {
+
     constructor() {
         this.actualLevel = 0;
         this.delay = [800, 717, 633, 550, 467, 383, 300, 217, 133, 100, 83, 83, 83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 17];
@@ -998,7 +1060,7 @@ class Ticker {
 
         EMITTER.subscribe('stats:newLevel', (level) => {
             this.actualLevel = level;
-            this.stop();
+            setTimeout(clearInterval(this.setInterval), 0);
             this.start(this.actualLevel);
         });
 
@@ -1006,26 +1068,98 @@ class Ticker {
             // console.log('...>', level);
             this.setInterval = setInterval(() => {
                 block.activeBlock.moveDown();
+                console.log('.');
             }, this.delay[level]);
         }
 
+        this.pause = (delay) => {
+            setTimeout(clearInterval(this.setInterval), 0);
+            setTimeout(this.start, delay);
+        }
+
         this.stop = () => {
-            clearInterval(this.setInterval);
+            setTimeout(clearInterval(this.setInterval), 0);
         }
 
         EMITTER.subscribe('block:gameOver', this.stop);
-        EMITTER.subscribe('canvas:wipeAnimationStart', this.stop);
-        EMITTER.subscribe('canvas:wipeAnimationEnd', this.start);
+
+        //Запускается пауза и таймер дважды, если происходят оба события
+        EMITTER.subscribe('block:blockFixed', () => this.pause(2000), 0); //this.delay[this.actualLevel]
+        EMITTER.subscribe('canvas:wipeAnimationStart', () => this.pause(2000), 0);
+        // EMITTER.subscribe('canvas:wipeAnimationEnd', this.start);
     }
+
+    // constructor() {
+    //     let timeoutID = 0;
+    //     let tickerActive = false;
+    //     let actualLevel = 0;
+    //     const delay = [800, 717, 633, 550, 467, 383, 300, 217, 133, 100, 83, 83, 83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 17];
+
+    //     let del = delay[actualLevel];
+
+    //     setInterval
+
+    //     this.start = (startDelay = del * 2) => {
+
+    //         //Только если активность не ожидается, можем запустить тикер (защита от повторного вызова)
+    //         if (tickerActive === false) {
+
+    //             //Start
+    //             console.log('Start | Actual level:', actualLevel);
+    //             tickerActive = true;
+    //             timeoutID = setTimeout(function tick() {
+
+    //                 //Tick
+    //                 console.log('.');
+    //                 timeoutID = setTimeout(() => {
+    //                     if (tickerActive) {
+    //                         block.activeBlock.moveDown();
+    //                         tick();
+    //                     } else {
+    //                         console.log('ELSE');
+    //                         clearTimeout(timeoutID);
+    //                         tick();
+    //                     }
+    //                 }, del);
+
+
+    //             }, startDelay);
+    //         }
+    //     }
+
+    //     this.stop = () => {
+    //         console.log('Stop');
+    //         setTimeout(clearTimeout(timeoutID), 0);
+    //         tickerActive = false;
+    //     }
+
+    //     EMITTER.subscribe('block:gameOver', () => {
+    //         console.log('Ticker stopped by GameOver');
+    //         this.stop();
+    //     });
+    //     EMITTER.subscribe('canvas:wipeAnimationStart', () => {
+    //         console.log('Delay added to ticker by animation');
+    //         del += 360;
+    //     });
+    //     EMITTER.subscribe('canvas:wipeAnimationEnd', () => {
+    //         console.log('Ticker delay restored after animation');
+    //         // this.start(delay[actualLevel]);
+    //         del = delay[actualLevel];
+    //     });
+    //     EMITTER.subscribe('stats:newLevel', (level) => {
+    //         del = delay[actualLevel];
+    //     });
+    // }
 }
 
 //=======================================================
 
 
 let textures = new Textures();
+let sounds = new Sounds();
 let canvas = new Canvas(document.getElementsByTagName('canvas')[0]);
-//let matrix = new Matrix('[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null,null,null,null],[null,null,null,{"state":"fixed","color":2},{"state":"fixed","color":2},null,{"state":"fixed","color":1},null,null,null],[null,null,null,{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},null,null,null],[{"state":"fixed","color":1},null,{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},null,{"state":"fixed","color":3},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},null],[{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":1},null],[{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},null],[{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":2},{"state":"fixed","color":2},null]]');
-let matrix = new Matrix();
+let matrix = new Matrix('[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{"state":"fixed","color":3},null,null,null,null,null,null],[null,null,{"state":"fixed","color":3},{"state":"fixed","color":3},null,null,null,null,null,null],[null,null,{"state":"fixed","color":3},{"state":"fixed","color":3},null,null,null,null,null,null],[null,{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},null,{"state":"fixed","color":3},{"state":"fixed","color":3},null,null,null],[null,{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},null,null,null],[null,{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},null,null,null],[{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},null],[{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null,{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3}]]');
+//let matrix = new Matrix();
 let block = new Block();
 let stats = new Stats(document.getElementsByClassName('game')[0]);
 let control = new Control(document.getElementById('controller'));
