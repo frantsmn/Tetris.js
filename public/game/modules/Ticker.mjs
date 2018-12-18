@@ -27,6 +27,8 @@ export default class Ticker {
         this.stop = () => {
             requestAnimationFrame(() => {
                 running = false;
+                //Важно! Сразу же обнуляем таймер, чтобы небыло срабатывания "moveDown" после GameOver
+                clearInterval(this.intervalId); 
                 console.log("running: ", running);
             });
         }
