@@ -16,7 +16,7 @@ export default class Sound {
 
             for (let i = 0; i < sources.length; i++) {
                 this[sources[i]] = new Audio();
-                this[sources[i]].src = `/game/sound/${sources[i]}.mp3`;
+                this[sources[i]].src = `./game/sound/${sources[i]}.mp3`;
                 this[sources[i]].onload = this[sources[i]].onerror = onLoad;
             }
         }

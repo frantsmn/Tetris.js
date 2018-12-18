@@ -17,6 +17,12 @@ export default class Block {
         this.activeBlockId = 0;
         let activeBlock = this.activeBlock = this.createBlock[this.queue[this.activeBlockId]]();
         let nextBlock = this.nextBlock = this.createBlock[this.queue[this.activeBlockId + 1]]();
+
+        //Обновить подсчет появившихся блоков в статистике
+        stats.refreshAppearedBlocks(activeBlock.name);
+        //Обновить в статистике следующий блок
+        stats.refreshNextBlock(nextBlock.name);
+
         let goToNextBlock = () => {
             activeBlock = this.activeBlock = this.nextBlock;
             nextBlock = this.nextBlock = this.createBlock[this.queue[++this.activeBlockId]]();
@@ -31,13 +37,13 @@ export default class Block {
 
         function BlockMovements() {
             this.moveDown = function () {
-// console.log(matrix.getMatrix());
+                // console.log(matrix.getMatrix());
                 //Если следующая линия свободна
                 if (matrix.checkPointsIsEmpty(this.position.x, this.position.y + 1, this.pointsSet[this.rotation.state - 1])) {
                     eraseBlock();
                     this.position.y++;
                     drawBlock();
-                } else if (this.position.y !== 0) { //Если следующая линия занята и он не на нулевой линии
+                } else if (this.position.y) { //Если следующая линия занята и он не на нулевой линии (this.position.y !== 0)
                     //Сообщить что блок упал
                     EMITTER.emit('block:blockFixed');
                     //Воспроизвести звук

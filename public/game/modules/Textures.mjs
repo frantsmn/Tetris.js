@@ -5,16 +5,16 @@ export default class Textures {
         //Формирование списка текстур и картинок
         this.resources = [];
         for (let level = 0; level <= 9; level++) {
-            this.resources.push(`/game/svg/textures/level_${level}/type_1.svg`);
-            this.resources.push(`/game/svg/textures/level_${level}/type_2.svg`);
-            this.resources.push(`/game/svg/textures/level_${level}/type_3.svg`);
-            this.resources.push(`/game/svg/blocks/level_${level}/i-block.svg`);
-            this.resources.push(`/game/svg/blocks/level_${level}/j-block.svg`);
-            this.resources.push(`/game/svg/blocks/level_${level}/l-block.svg`);
-            this.resources.push(`/game/svg/blocks/level_${level}/o-block.svg`);
-            this.resources.push(`/game/svg/blocks/level_${level}/s-block.svg`);
-            this.resources.push(`/game/svg/blocks/level_${level}/t-block.svg`);
-            this.resources.push(`/game/svg/blocks/level_${level}/z-block.svg`);
+            this.resources.push(`./game/svg/textures/level_${level}/type_1.svg`);
+            this.resources.push(`./game/svg/textures/level_${level}/type_2.svg`);
+            this.resources.push(`./game/svg/textures/level_${level}/type_3.svg`);
+            this.resources.push(`./game/svg/blocks/level_${level}/i-block.svg`);
+            this.resources.push(`./game/svg/blocks/level_${level}/j-block.svg`);
+            this.resources.push(`./game/svg/blocks/level_${level}/l-block.svg`);
+            this.resources.push(`./game/svg/blocks/level_${level}/o-block.svg`);
+            this.resources.push(`./game/svg/blocks/level_${level}/s-block.svg`);
+            this.resources.push(`./game/svg/blocks/level_${level}/t-block.svg`);
+            this.resources.push(`./game/svg/blocks/level_${level}/z-block.svg`);
         }
 
         this.preloadImages = (sources, func) => {
@@ -55,9 +55,9 @@ export default class Textures {
 
     set level(value) {
         this._level = value;
-        this[1].src = `/game/svg/textures/level_${value}/type_1.svg`;
-        this[2].src = `/game/svg/textures/level_${value}/type_2.svg`;
-        this[3].src = `/game/svg/textures/level_${value}/type_3.svg`;
+        this[1].src = `./game/svg/textures/level_${value}/type_1.svg`;
+        this[2].src = `./game/svg/textures/level_${value}/type_2.svg`;
+        this[3].src = `./game/svg/textures/level_${value}/type_3.svg`;
     }
 
     get level() {

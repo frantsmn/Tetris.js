@@ -1,5 +1,3 @@
-'use strict';
-
 document.querySelectorAll(".neon").forEach((element) => {
     neon(element);
 });
@@ -8,8 +6,8 @@ function neon(element) {
     let skew = {
         size: 0, x: 0, y: 0, gipoten: 0
     };
-    let interval;
-    let fx = new Audio('/neon-buttons/btn.wav');
+    let interval = 0;
+    let fx = new Audio('./neon-buttons/btn.wav');
 
     element.addEventListener('mouseenter', start);
     element.addEventListener('mousemove', checkCursor);
@@ -28,7 +26,9 @@ function neon(element) {
         element.style.transition = `.3s ease-out transform`;
         fx.play();
 
-        interval = setInterval(() => element.style.transform = `perspective(${skew.size}px) rotate3d(${skew.y},${skew.x},0,${skew.gipoten}deg)`, 30);
+        interval = setInterval(() => {
+            element.style.transform = `perspective(${skew.size}px) rotate3d(${skew.y},${skew.x},0,${skew.gipoten}deg)`;
+        }, 30);
     }
 
     function checkCursor(e) {
