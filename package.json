@@ -1,20 +1,8 @@
 {
-  "name": "tetris",
+  "name": "tetris.js",
   "version": "1.0.0",
   "description": "Tetris.js",
-  "main": "app.js",
-  "dependencies": {},
-  "devDependencies": {
-    "babel-core": "^6.21.0",
-    "babel-loader": "^7.1.4",
-    "babel-preset-es2015": "^6.18.0",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.4"
-  },
-  "scripts": {
-    "build": "webpack -p",
-    "watch": "webpack --watch"
-},
+  "main": "index.js",
   "keywords": [
     "tetris",
     "nes",
@@ -22,5 +10,16 @@
     "js"
   ],
   "author": "Frants Mitskun",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frantsmn/Tetris.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/frantsmn/Tetris.js/issues"
+  },
+  "homepage": "https://github.com/frantsmn/Tetris.js#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }

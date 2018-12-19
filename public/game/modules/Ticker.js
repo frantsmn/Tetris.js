@@ -1,6 +1,6 @@
 export default class Ticker {
 
-    constructor(block) {
+    constructor(block, overlay, sound) {
 
         this.actualLevel = 0;
         this.delay = [800, 717, 633, 550, 467, 383, 300, 217, 133, 100, 83, 83, 83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 17];
@@ -17,7 +17,9 @@ export default class Ticker {
                     block.activeBlock.moveDown();
                     console.log('.');
                 } else {
-                    clearInterval(this.intervalId);
+                    requestAnimationFrame(() => {
+                        clearInterval(this.intervalId);
+                    });
                 }
 
             }, this.delay[level]);
@@ -25,21 +27,34 @@ export default class Ticker {
 
         //Остановка тикера
         this.stop = () => {
+            clearInterval(this.intervalId);
             requestAnimationFrame(() => {
                 running = false;
                 //Важно! Сразу же обнуляем таймер, чтобы небыло срабатывания "moveDown" после GameOver
-                clearInterval(this.intervalId); 
+                clearInterval(this.intervalId);
                 console.log("running: ", running);
             });
         }
 
         //Приостановка
         this.sleep = (delay) => {
+            clearInterval(this.intervalId);
             requestAnimationFrame(() => {
                 running = false;
                 console.log("running: ", running);
                 debounce(this.run, delay)();
             });
+        }
+
+        this.togglePause = () => {
+            if (running) {
+                running = !running;
+                overlay.show();
+            } else {
+                overlay.hide();
+                this.sleep(this.delay[this.actualLevel]);
+            }
+            sound.play('pause');
         }
 
         //ID Таймера отсчета текущей задержки
@@ -85,8 +100,8 @@ export default class Ticker {
         }
 
         EMITTER.subscribe('block:gameOver', this.stop);
-        EMITTER.subscribe('block:blockFixed', () => this.sleep(1000));
-        EMITTER.subscribe('canvas:wipeAnimationStart', () => this.sleep(5000));
+        EMITTER.subscribe('block:blockFixed', () => this.sleep(60));
+        EMITTER.subscribe('canvas:wipeAnimationStart', () => this.sleep(360));
 
         EMITTER.subscribe('stats:newLevel', (level) => {
             this.actualLevel = level;

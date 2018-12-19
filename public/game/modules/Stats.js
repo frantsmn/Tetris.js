@@ -46,15 +46,18 @@ export default class Stats {
                 EMITTER.emit('stats:newLevel', this.level);
                 //Вопроизвести звук
                 sound.play('levelup');
+                window.navigator.vibrate([0, 200, 100, 100, 100]);
                 //Если просто очищены линии, то
             } else {
                 if (n === 4) {
                     // В случае тетриса
                     this.blinkAnimation();
                     sound.play('tetris');
+                    window.navigator.vibrate([0, 100, 500]);
                 } else {
                     //В случае одиночной
                     sound.play('clearline');
+                    window.navigator.vibrate([0, 200, 30, 30, 30, 30, 30, 30, 30]);
                 }
             }
 

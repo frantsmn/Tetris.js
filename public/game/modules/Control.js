@@ -1,5 +1,5 @@
 export default class Control {
-    constructor(controller, block) {
+    constructor(controller, block, ticker) {
 
         //Флаг для регирования на нажатия (true = реагировать | false = не реагировать )
         let controlAvailable = true;
@@ -16,14 +16,22 @@ export default class Control {
             39: 'Right',
             37: 'Left',
             40: 'Down',
+            32: 'Pause',
             'button-b': 'B',
             'button-a': 'A',
             'button-right': 'Right',
             'button-left': 'Left',
-            'button-down': 'Down'
+            'button-down': 'Down',
+            'button-pause': 'Pause',
         }
 
         this.keydown = (e) => {
+
+            if(voc[e.keyCode || e.srcElement.id] === 'Pause') {
+                ticker.togglePause();
+                return;
+            }
+
             if (controlAvailable) {
 
                 //Если такая кнопка уже нажата, то избавляемся от системных повторов нажатия (система клацает сама, при зажатии клавиши)
@@ -49,7 +57,7 @@ export default class Control {
                             block.activeBlock.moveRight();
                             //Рекурсивно вызываем таймаут
                             shiftRepeatTimeoutID = setTimeout(tick, 100);
-                        }, 267);
+                        }, 260);
                         break;
                     case 'Left':
                         clearTimeout(shiftRepeatTimeoutID); //Обнуляем повторы нажатия чтобы не возникал кнфликт при одновременном нажатии
@@ -58,7 +66,7 @@ export default class Control {
                             block.activeBlock.moveLeft();
                             //Рекурсивно вызываем таймаут
                             shiftRepeatTimeoutID = setTimeout(tick, 100);
-                        }, 267);
+                        }, 260);
                         break;
                     case 'Down':
                         // setTimeout(() => {
@@ -121,7 +129,7 @@ export default class Control {
             });
 
             window.requestAnimationFrame(() => {
-                clearTimeout(shiftRepeatTimeoutID);
+                // clearTimeout(shiftRepeatTimeoutID);
                 // console.log('downRepeatTimeoutID cleared!');
             });
             // console.log('control available: ', controlAvailable);
