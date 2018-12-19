@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Tetris.js",
   "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "keywords": [
     "tetris",
     "nes",
