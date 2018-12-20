@@ -50,11 +50,15 @@ export default class Ticker {
             if (running) {
                 running = !running;
                 overlay.show();
+                sound.play('pause');
+                return true;
             } else {
                 overlay.hide();
                 this.sleep(this.delay[this.actualLevel]);
+                sound.play('pause');
+                return false;
             }
-            sound.play('pause');
+            
         }
 
         //ID Таймера отсчета текущей задержки

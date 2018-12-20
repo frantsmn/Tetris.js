@@ -1,7 +1,9 @@
 @font-face {
     font-family: 'Press Start 2P';
-    src: url('./fonts/PressStart2P-Regular.ttf');
+    src: url('https://fonts.googleapis.com/css?family=Press+Start+2P&subset=cyrillic');
 }
+
+
 
 :root {
     --cyan: rgba(0, 255, 255, 1);

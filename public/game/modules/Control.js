@@ -27,8 +27,9 @@ export default class Control {
 
         this.keydown = (e) => {
 
-            if(voc[e.keyCode || e.srcElement.id] === 'Pause') {
-                ticker.togglePause();
+            if (voc[e.keyCode || e.srcElement.id] === 'Pause') {
+                let isPaused = ticker.togglePause();
+                controlAvailable = !isPaused;
                 return;
             }
 

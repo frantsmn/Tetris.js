@@ -4,20 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- plugs -->
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&amp;subset=cyrillic" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="neon-buttons/neon-buttons.css">
+    <script src="neon-buttons/neon-buttons.js" defer></script>
+
     <!-- main -->
     <link rel="stylesheet" href="style.css">
-
     <link rel="stylesheet" href="header/header.css">
     <script src="header/header.js" defer></script>
+
     <!-- game -->
     <link rel="stylesheet" href="game/css/main.css">
     <link rel="stylesheet" href="game/css/panel.css">
     <link rel="stylesheet" href="game/css/controller.css">
     <script src="game/emitter.js"></script>
     <script type="module" src="game/tetris.js" defer></script>
-    <!-- plugs -->
-    <link rel="stylesheet" href="neon-buttons/neon-buttons.css">
-    <script src="neon-buttons/neon-buttons.js" defer></script>
 
     <title>Tetris.js</title>
 </head>
@@ -150,8 +154,11 @@
 
         </section>
 
-        <section class="records hidden">
-            <div class="panel">
+        <section class="overlay hidden">
+
+
+
+            <div class="scores">
                 <p class="title">highscores</p>
                 <div class="grid-container">
                     <div>Player1</div>
@@ -174,6 +181,11 @@
                     <div>0</div>
                 </div>
             </div>
+
+            <div class="about">
+                <p class="title">About</p>
+            </div>
+
         </section>
 
     </main>
