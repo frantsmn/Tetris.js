@@ -7,7 +7,8 @@
 
     <!-- plugs -->
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&amp;subset=cyrillic" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
     <link rel="stylesheet" href="neon-buttons/neon-buttons.css">
     <script src="neon-buttons/neon-buttons.js" defer></script>
 
@@ -19,6 +20,7 @@
     <!-- game -->
     <link rel="stylesheet" href="game/css/main.css">
     <link rel="stylesheet" href="game/css/panel.css">
+    <link rel="stylesheet" href="game/css/overlay.css">
     <link rel="stylesheet" href="game/css/controller.css">
     <script src="game/emitter.js"></script>
     <script type="module" src="game/tetris.js" defer></script>
@@ -28,15 +30,12 @@
 
 <body>
 
-    <!-- <H1>Tetris.js</H1> -->
-    <!-- <p>Implementation of «NES Tetris» game using JavaScript</p> -->
-    <!-- <p>FM © 2018</p> -->
-
     <header>
         <div class="left">
-            <button class="neon">load</button>
-            <button class="neon">scores</button>
-            <button class="neon">about</button>
+            <button id="StartBtn" class="neon">Game</button>
+            <button id="ScoresBtn" class="neon">Scores</button>
+            <button id="AboutBtn" class="neon">About</button>
+            <button id="HelpBtn" class="neon">?</button>
         </div>
 
         <div class="right">
@@ -66,14 +65,7 @@
                 </div>
 
                 <div class="panel glass">
-
                     <canvas width="200" height="400"></canvas>
-                    <div class="player-overlay hidden">
-                        <p class="title">PAUSE</p>
-                        <button class="neon">Start new</button>
-                        <button class="neon">Continiue game</button>
-                        <button class="neon">Save game</button>
-                    </div>
                 </div>
 
                 <div class="panel info">
@@ -154,36 +146,98 @@
 
         </section>
 
-        <section class="overlay hidden">
+        <section class="overlay">
 
+            <div class="overlay-start visible">
+                <div class="content">
+                    <h1><span class="big">Tetris</span>.js</h1>
+                    <button id="NewGameBtn" class="neon">New game</button>
+                    <button id="LoadGameBtn" class="neon">Load game</button>
+                </div>
+            </div>
 
+            <div class="overlay-pause">
+                <div class="content">
+                    <h2>PAUSE</h2>
+                    <button id="ContiniueBtn" class="neon">Continiue</button>
+                    <button id="SaveGameBtn" class="neon">Save game</button>
+                </div>
+            </div>
+
+            <div class="overlay-gameover">
+                <div class="content">
+                    <h2>GAME OVER</h2>
+                    <p>Your score</p>
+
+                    <div>
+                        <input type="text" maxlength="8" placeholder="player"> <span>52298 pts</span>
+                    </div>
+
+                    <button id="SaveScoreBtn" class="neon">Save</button>
+                </div>
+            </div>
+
+            <div class="saves">
+                <div class="content">
+                    <h2>SAVES</h2>
+
+                    <div>
+                        <div>1</div>
+                        <div>2</div>
+                    </div>
+
+                    <div>
+                        <div>3</div>
+                        <div>4</div>
+                    </div>
+
+                    <button id="LoadSaveBtn" class="neon">Load</button>
+                </div>
+            </div>
 
             <div class="scores">
-                <p class="title">highscores</p>
-                <div class="grid-container">
-                    <div>Player1</div>
-                    <div>128532</div>
-                    <div>Player2</div>
-                    <div>95285</div>
-                    <div>Player3</div>
-                    <div>73284</div>
-                    <div>Player4</div>
-                    <div>57223</div>
-                    <div>Player5</div>
-                    <div>12023</div>
-                    <div>Player6</div>
-                    <div>128</div>
-                    <div>Player7</div>
-                    <div>0</div>
-                    <div>Player8</div>
-                    <div>0</div>
-                    <div>Player9</div>
-                    <div>0</div>
+                <div class="content">
+                    <h2>HIGHSCORES</h2>
+                    <div class="grid-container">
+                        <div>Player1</div>
+                        <div>128532</div>
+                        <div>Player2</div>
+                        <div>95285</div>
+                        <div>Player3</div>
+                        <div>73284</div>
+                        <div>Player4</div>
+                        <div>57223</div>
+                        <div>Player5</div>
+                        <div>12023</div>
+                        <div>Player6</div>
+                        <div>128</div>
+                        <div>Player7</div>
+                        <div>0</div>
+                        <div>Player8</div>
+                        <div>0</div>
+                        <div>Player9</div>
+                        <div>0</div>
+                    </div>
                 </div>
             </div>
 
             <div class="about">
-                <p class="title">About</p>
+                <div class="content">
+                    <h2>ABOUT</h2>
+                    <p>Implementation of «NES Tetris» game using JavaScript</p>
+                    <a href="https://github.com/frantsmn/Tetris.js" target="_blank">GitHub</a>
+                    <small>Frants Mitskun © 2018</small>
+                </div>
+            </div>
+
+            <div class="help">
+                <div class="content" style="align-items: flex-start; width: max-content;">
+                    <h2 style="align-self: center;">CONTROLS</h2>
+                    <p><span style="color:aqua;"> Arrows:</span> move</p>
+                    <p><span style="color:aqua;"> D:</span> rotate left</p>
+                    <p><span style="color:aqua;"> F:</span> rotate right</p>
+                    <p><span style="color:aqua;"> Space:</span> pause</p>
+                </div>
             </div>
 
         </section>

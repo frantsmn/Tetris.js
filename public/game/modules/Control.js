@@ -30,6 +30,8 @@ export default class Control {
             if (voc[e.keyCode || e.srcElement.id] === 'Pause') {
                 let isPaused = ticker.togglePause();
                 controlAvailable = !isPaused;
+                clearTimeout(shiftRepeatTimeoutID);
+                clearTimeout(downRepeatTimeoutID);
                 return;
             }
 

@@ -9,6 +9,7 @@ canvas {
 
 main {
     margin: 0 auto;
+    position: relative;
 }
 
 /* === MAIN === (competitive mode) */
@@ -53,7 +54,7 @@ main.competitive .opponent {
 
 /* PLAYER & OPPONENT => Glass */
 
-.panel.glass .player-overlay {
+/* .panel.glass .player-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -66,7 +67,7 @@ main.competitive .opponent {
 
 .panel.glass .player-overlay button {
     flex-shrink: 0;
-}
+} */
 
 /* PLAYER => Info */
 
@@ -80,7 +81,7 @@ main.competitive .opponent {
     align-items: center;
 }
 
-/* === RECORDS === */
+/* === RECORDS ===
 
 .records .panel {
     min-width: 200px;
@@ -104,5 +105,5 @@ main.competitive .opponent {
 * {
     /* outline: 1px red;
     outline-offset: 1px;
-    outline-style: groove; */
-}
+    outline-style: groove; 
+} */

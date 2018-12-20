@@ -24,7 +24,9 @@ function neon(element) {
 
         element.classList.add('active');
         element.style.transition = `.3s ease-out transform`;
-        fx.play();
+        if (document.PLAY_SOUND) {
+            fx.play();
+        }
 
         interval = setInterval(() => {
             element.style.transform = `perspective(${skew.size}px) rotate3d(${skew.y},${skew.x},0,${skew.gipoten}deg)`;
@@ -41,7 +43,7 @@ function neon(element) {
             size: this.offsetWidth + this.offsetHeight / 2,
             x: (pos.x / this.offsetWidth * 10) | 0,
             y: (-pos.y / this.offsetHeight * 10) | 0,
-            gipoten: (Math.sqrt(pos.x * pos.x + pos.y * pos.y) / 2.8) | 0
+            gipoten: (Math.sqrt(pos.x * pos.x + pos.y * pos.y) / 6.8) | 0
         }
     }
 

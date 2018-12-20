@@ -3,17 +3,11 @@
     src: url('https://fonts.googleapis.com/css?family=Press+Start+2P&subset=cyrillic');
 }
 
-
-
 :root {
     --cyan: rgba(0, 255, 255, 1);
     --cyan-2: rgba(0, 255, 255, .5);
     --cyan-3: rgba(0, 255, 255, .33);
     --white5: rgba(255, 255, 255, 0.6);
-}
-
-.hidden {
-    display: none !important;
 }
 
 body {
@@ -42,4 +36,8 @@ h1 {
 
 h2 {
     font-size: 1.2em
+}
+
+.big{
+	font-size: 2em;
 }

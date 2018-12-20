@@ -1,0 +1,124 @@
+@keyframes appearance {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes disappearance {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+.visible {
+    display: flex !important;
+    opacity: 0;
+    transform: translateZ(0), translateY(-100%);
+    animation: appearance 0.3s 0.3s ease forwards;
+}
+
+.hidden {
+    opacity: 1;
+    transform: translateZ(0), translateY(-100%);
+    animation: disappearance 0.3s 0.3s ease forwards;
+}
+
+.overlay a {
+    color: var(--cyan-2);
+}
+
+.overlay a:hover {
+    color: var(--cyan);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    display: flex;
+    flex-flow: column nowrap;
+    text-align: center;
+    line-height: 200%;
+    border: 5px solid var(--cyan-3);
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.95);
+    overflow: hidden;
+}
+
+.overlay>div {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    display: none;
+}
+
+.overlay>div .content{
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    
+    display: flex;
+
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay>div .content button{
+    width: 60%;
+    line-height: 150%;
+    padding: 25px 5px;
+    margin-bottom: 20px;
+}
+
+/* PLAYER & OPPONENT => Glass */
+
+.panel.glass .player-overlay button {
+    flex-shrink: 0;
+}
+
+/* === Highscores === */
+
+.scores {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.scores .grid-container {
+    height: fit-content;
+    font-family: 'Press Start 2P';
+    color: white;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+
+* {
+    /* outline: 1px red;
+    outline-offset: 1px;
+    outline-style: groove; */
+}

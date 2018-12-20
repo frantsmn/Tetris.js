@@ -1,6 +1,6 @@
 export default class Ticker {
 
-    constructor(block, overlay, sound) {
+    constructor(block, sound) {
 
         this.actualLevel = 0;
         this.delay = [800, 717, 633, 550, 467, 383, 300, 217, 133, 100, 83, 83, 83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 17];
@@ -49,12 +49,15 @@ export default class Ticker {
         this.togglePause = () => {
             if (running) {
                 running = !running;
-                overlay.show();
+                EMITTER.emit('ticker:pausePressed')
+                // overlay.show();
                 sound.play('pause');
                 return true;
             } else {
-                overlay.hide();
-                this.sleep(this.delay[this.actualLevel]);
+                EMITTER.emit('ticker:pauseReleased');
+                // overlay.hide();
+                // this.sleep(this.delay[this.actualLevel]);
+                this.sleep(0);
                 sound.play('pause');
                 return false;
             }
