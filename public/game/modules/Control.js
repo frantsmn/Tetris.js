@@ -2,7 +2,7 @@ export default class Control {
     constructor(controller, block, ticker) {
 
         //Флаг для регирования на нажатия (true = реагировать | false = не реагировать )
-        let controlAvailable = true;
+        this.controlAvailable = false;
         //ID таймаута для повторений движения влево/вправо блока, при зажатой кнопке
         let shiftRepeatTimeoutID = 0;
         //ID таймаута для повторений движения вниз блока, при зажатой кнопке
@@ -27,15 +27,19 @@ export default class Control {
 
         this.keydown = (e) => {
 
+
             if (voc[e.keyCode || e.srcElement.id] === 'Pause') {
+
                 let isPaused = ticker.togglePause();
-                controlAvailable = !isPaused;
+                this.controlAvailable = !isPaused;
+
                 clearTimeout(shiftRepeatTimeoutID);
                 clearTimeout(downRepeatTimeoutID);
                 return;
+                
             }
-
-            if (controlAvailable) {
+           
+            if (this.controlAvailable) {
 
                 //Если такая кнопка уже нажата, то избавляемся от системных повторов нажатия (система клацает сама, при зажатии клавиши)
                 if (this.key[voc[e.keyCode || e.srcElement.id]]) return;
@@ -120,7 +124,7 @@ export default class Control {
         }
 
         const controlLock = () => {
-            controlAvailable = false;
+            this.controlAvailable = false;
             //Вне очереди очищаем рекурсивный таймаут на повтор движения в стороны
             // setTimeout(() => clearTimeout(shiftRepeatTimeoutID), 0);
             //Вне очереди очищаем рекурсивный таймаут на повтор движения вниз
@@ -139,7 +143,7 @@ export default class Control {
         }
 
         const controlUnlock = () => {
-            controlAvailable = true;
+            this.controlAvailable = true;
             // console.log('control available: ', controlAvailable);
         }
 

@@ -8,6 +8,11 @@
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: flex-end;
+    z-index: 2;
+}
+
+#controller.hidden{
+    display: none;
 }
 
 #controller button {

@@ -1,18 +1,31 @@
 'use strict';
 
-//Переменная состояния звука
-document.PLAY_SOUND = true;
-
 //Показать контроллер, если экран меньше 600px
 if (window.innerWidth < 600) {
     document.getElementById('ControllerToggler').classList.toggle('on');
     toggleController();
 }
 
+//Предустановка настройки звука в localStorage
+if (localStorage['SOUND'] === undefined) {
+    localStorage.setItem('SOUND', 'true');
+}
+
+//Предустановка стилй кнопке звука в зависимости от настроек (по умолчанию кнопка не светится)
+if (localStorage['SOUND'] === 'true') {
+    document.getElementById('SoundToggler').classList.add('on');
+}
+
 //Выключение/включение звука
 document.getElementById('SoundToggler').addEventListener('click', function (e) {
-    e.target.classList.toggle('on');
-    document.PLAY_SOUND = !document.PLAY_SOUND;
+
+    if (localStorage['SOUND'] === 'true') {
+        localStorage.setItem('SOUND', 'false');
+        e.target.classList.remove('on');
+    } else {
+        localStorage.setItem('SOUND', 'true');
+        e.target.classList.add('on');
+    }
 });
 
 //Показать/спрятать контроллер

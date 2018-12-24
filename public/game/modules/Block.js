@@ -3,6 +3,7 @@ export default class Block {
 
         this.queue = queue ? queue : [...new Array(1000)].map(() => Math.floor(Math.random() * 7) + 1);
         this.createRandomQueue = () => [...new Array(1000)].map(() => Math.floor(Math.random() * 7) + 1);
+        this.createNewQueue = () => this.queue = this.createRandomQueue();
 
         this.createBlock = {
             1: () => new I_block(),

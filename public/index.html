@@ -6,16 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
     <!-- plugs -->
-    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&amp;subset=cyrillic" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="neon-buttons/neon-buttons.css">
     <script src="neon-buttons/neon-buttons.js" defer></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.6/css/swiper.min.css">
+
+
     <!-- main -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="header/header.css">
-    <script src="header/header.js" defer></script>
+    <script src="header/settings.js" defer></script>
 
     <!-- game -->
     <link rel="stylesheet" href="game/css/main.css">
@@ -23,7 +26,9 @@
     <link rel="stylesheet" href="game/css/overlay.css">
     <link rel="stylesheet" href="game/css/controller.css">
     <script src="game/emitter.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.6/js/swiper.min.js" defer></script>
     <script type="module" src="game/tetris.js" defer></script>
+
 
     <title>Tetris.js</title>
 </head>
@@ -40,7 +45,7 @@
 
         <div class="right">
             <button id="ControllerToggler" class="neon toggler" title="Controller">+ oo</button>
-            <button id="SoundToggler" class="neon toggler on" title="Sound">{&#060;</button>
+            <button id="SoundToggler" class="neon toggler" title="Sound">{&#060;</button>
             <button id="FullScreenToggler" class="neon toggler" title="Fullscreen">[]</button>
         </div>
     </header>
@@ -146,100 +151,87 @@
 
         </section>
 
-        <section class="overlay">
+        <section class="overlay swiper-container">
+            <div class="swiper-wrapper">
 
-            <div class="overlay-start visible">
-                <div class="content">
-                    <h1><span class="big">Tetris</span>.js</h1>
-                    <button id="NewGameBtn" class="neon">New game</button>
-                    <button id="LoadGameBtn" class="neon">Load game</button>
-                </div>
-            </div>
-
-            <div class="overlay-pause">
-                <div class="content">
-                    <h2>PAUSE</h2>
-                    <button id="ContiniueBtn" class="neon">Continiue</button>
-                    <button id="SaveGameBtn" class="neon">Save game</button>
-                </div>
-            </div>
-
-            <div class="overlay-gameover">
-                <div class="content">
-                    <h2>GAME OVER</h2>
-                    <p>Your score</p>
-
-                    <div>
-                        <input type="text" maxlength="8" placeholder="player"> <span>52298 pts</span>
-                    </div>
-
-                    <button id="SaveScoreBtn" class="neon">Save</button>
-                </div>
-            </div>
-
-            <div class="saves">
-                <div class="content">
-                    <h2>SAVES</h2>
-
-                    <div>
-                        <div>1</div>
-                        <div>2</div>
-                    </div>
-
-                    <div>
-                        <div>3</div>
-                        <div>4</div>
-                    </div>
-
-                    <button id="LoadSaveBtn" class="neon">Load</button>
-                </div>
-            </div>
-
-            <div class="scores">
-                <div class="content">
-                    <h2>HIGHSCORES</h2>
-                    <div class="grid-container">
-                        <div>Player1</div>
-                        <div>128532</div>
-                        <div>Player2</div>
-                        <div>95285</div>
-                        <div>Player3</div>
-                        <div>73284</div>
-                        <div>Player4</div>
-                        <div>57223</div>
-                        <div>Player5</div>
-                        <div>12023</div>
-                        <div>Player6</div>
-                        <div>128</div>
-                        <div>Player7</div>
-                        <div>0</div>
-                        <div>Player8</div>
-                        <div>0</div>
-                        <div>Player9</div>
-                        <div>0</div>
+                <!-- #0 -->
+                <div class="overlay-start swiper-slide">
+                    <div class="content">
+                        <h1><span class="big">Tetris</span>.js</h1>
+                        <button id="NewGameBtn" class="neon">Start new game</button>
+                        <button id="LoadGameBtn" class="neon">Load game</button>
                     </div>
                 </div>
-            </div>
-
-            <div class="about">
-                <div class="content">
-                    <h2>ABOUT</h2>
-                    <p>Implementation of «NES Tetris» game using JavaScript</p>
-                    <a href="https://github.com/frantsmn/Tetris.js" target="_blank">GitHub</a>
-                    <small>Frants Mitskun © 2018</small>
+                <!-- #1 -->
+                <div class="overlay-pause swiper-slide">
+                    <div class="content">
+                        <h2>PAUSE</h2>
+                        <p>Press [space]/(pause) to continiue</p>
+                        <button id="SaveGameBtn" class="neon">Save game</button>
+                    </div>
                 </div>
-            </div>
+                <!-- #2 -->
+                <div class="overlay-gameover swiper-slide">
+                    <div class="content">
+                        <h2>GAME OVER</h2>
+                        <p>Your score: <span id="finalScore">0</span>
+                            <br>Enter your name
 
-            <div class="help">
-                <div class="content" style="align-items: flex-start; width: max-content;">
-                    <h2 style="align-self: center;">CONTROLS</h2>
-                    <p><span style="color:aqua;"> Arrows:</span> move</p>
-                    <p><span style="color:aqua;"> D:</span> rotate left</p>
-                    <p><span style="color:aqua;"> F:</span> rotate right</p>
-                    <p><span style="color:aqua;"> Space:</span> pause</p>
+                            <div>
+                                <input id="nameInput" type="text" maxlength="8" placeholder="player">
+                            </div>
+                        </p>
+
+                        <button id="SaveScoreBtn" class="neon">Save score</button>
+                    </div>
                 </div>
-            </div>
+                <!-- #4 -->
+                <div class="overlay-scores swiper-slide">
+                    <div class="content">
+                        <h2>HIGHSCORES</h2>
+                        <div class="grid-container">
+                            <div class="score-name">Player1</div>
+                            <div class="score-points">128532</div>
+                            <div class="score-name">Player2</div>
+                            <div class="score-points">95285</div>
+                            <div class="score-name">Player3</div>
+                            <div class="score-points">73284</div>
+                            <div class="score-name">Player4</div>
+                            <div class="score-points">57223</div>
+                            <div class="score-name">Player5</div>
+                            <div class="score-points">12023</div>
+                            <div class="score-name">Player6</div>
+                            <div class="score-points">128</div>
+                            <div class="score-name">Player7</div>
+                            <div class="score-points">0</div>
+                            <div class="score-name">Player8</div>
+                            <div class="score-points">0</div>
+                            <div class="score-name">Player9</div>
+                            <div class="score-points">0</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- #5 -->
+                <div class="overlay-about swiper-slide">
+                    <div class="content">
+                        <h2>ABOUT</h2>
+                        <p>Implementation of «NES Tetris» game using JavaScript</p>
+                        <a href="https://github.com/frantsmn/Tetris.js" target="_blank">GitHub</a>
+                        <small>Frants Mitskun © 2018</small>
+                    </div>
+                </div>
+                <!-- #6 -->
+                <div class="overlay-help swiper-slide">
+                    <div class="content" style="align-items: flex-start; width: max-content;">
+                        <h2 style="align-self: center;">CONTROLS</h2>
+                        <p><span style="color:aqua;"> Arrows:</span> move</p>
+                        <p><span style="color:aqua;"> D:</span> rotate left</p>
+                        <p><span style="color:aqua;"> F:</span> rotate right</p>
+                        <p><span style="color:aqua;"> Space:</span> pause</p>
+                    </div>
+                </div>
 
+            </div>
         </section>
 
     </main>

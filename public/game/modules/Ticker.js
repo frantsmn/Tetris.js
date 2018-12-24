@@ -49,19 +49,15 @@ export default class Ticker {
         this.togglePause = () => {
             if (running) {
                 running = !running;
-                EMITTER.emit('ticker:pausePressed')
-                // overlay.show();
+                EMITTER.emit('ticker:pausePressed');
                 sound.play('pause');
                 return true;
             } else {
                 EMITTER.emit('ticker:pauseReleased');
-                // overlay.hide();
-                // this.sleep(this.delay[this.actualLevel]);
                 this.sleep(0);
                 sound.play('pause');
                 return false;
             }
-            
         }
 
         //ID Таймера отсчета текущей задержки

@@ -11,29 +11,45 @@ export default class Stats {
             'i-block': 0,
         }
 
+        this.topScores = 0;
         this.topScore = 0;
         this.score = 0;
         this.lines = 0;
         this.level = 0;
 
+
+        this.init = () => {
+            this.loadTopscores();
+            this.score = 0;
+            this.lines = 0;
+            this.level = 0;
+            this.refreshBlockImages();
+            this.refresh()
+        }
+
+        //=======================================================
         //Счетчик высоты падения блока
         let fallLinesCounter = 0;
         //Подсчет высоты падения блока с зажатой кнопкой вниз
         EMITTER.subscribe('control:downPressed', (downPressed) => {
             fallLinesCounter = downPressed ? fallLinesCounter + 1 : 0;
         });
-        //Добавление к очкам высоты падения
+        //Добавить к очкам высоту падения
         EMITTER.subscribe('block:blockFixed', () => {
             this.score += fallLinesCounter;
             this.refresh();
         });
 
-        this.init = function () {
+        //=======================================================
+        //Обновление изображений блоков (подсчет появившихся блоков)
+        this.refreshBlockImages = function () {
             element.querySelectorAll('img[data-blockName]').forEach((item) => {
                 item.src = `./game/svg/blocks/level_${this.level % 10}/${item.dataset.blockname}.svg`;
             });
-        }
+        };
 
+        //=======================================================
+        //Добавить линии
         this.addLines = (n) => {
 
             this.lines += n;
@@ -81,23 +97,29 @@ export default class Stats {
             this.refresh();
         }
 
-        //Показ следующего блока
-        this.refreshNextBlock = function (nextBlockName) {
-            element.querySelector('img#nextBlock').src = `./game/svg/blocks/level_${this.level % 10}/${nextBlockName}.svg`;
-        }
-
-        //Подсчет появившихся в стакане блоков
-        this.refreshAppearedBlocks = function (activeBlockName) {
-            this.blockStatistics[activeBlockName]++;
-            for (var prop in this.blockStatistics) {
-                if (Object.prototype.hasOwnProperty.call(this.blockStatistics, prop)) {
-                    element.querySelector(`#${prop}-stat`).textContent = this.blockStatistics[prop];
-                }
+        //Подгрузка рекордов
+        //=======================================================
+        this.loadTopscores = function () {
+            this.topScores = JSON.parse(localStorage.getItem('topScores'));
+            if (this.topScores) {
+                let sortedTopScores = this.topScores.sort((a, b) => { return b.score - a.score })
+                this.topScore = sortedTopScores[0].score;
+            } else {
+                console.log('Scores empty: ', this.topScores);
+                this.topScore = 0;
             }
+            this.refresh();
+
+
+            
+
+
+            return this.topScores;
         }
 
-        this.refresh = function () {
 
+        //Обновление статистики (правая панель)
+        this.refresh = function () {
             //Рекорд очков
             element.querySelector(`#topScoreStat`).textContent = this.topScore;
             //Набранные очки
@@ -108,21 +130,33 @@ export default class Stats {
             element.querySelector(`#levelStat`).textContent = this.level;
         }
 
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        //Обновить картинку следующего блока
+        //Вызывается из Block.js
+        this.refreshNextBlock = function (nextBlockName) {
+            element.querySelector('img#nextBlock').src = `./game/svg/blocks/level_${this.level % 10}/${nextBlockName}.svg`;
+        }
+
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        //Подсчет появившихся в стакане блоков
+        //Вызывается из Block.js
+        this.refreshAppearedBlocks = function (activeBlockName) {
+            this.blockStatistics[activeBlockName]++;
+            for (var prop in this.blockStatistics) {
+                if (Object.prototype.hasOwnProperty.call(this.blockStatistics, prop)) {
+                    element.querySelector(`#${prop}-stat`).textContent = this.blockStatistics[prop];
+                }
+            }
+            this.refreshBlockImages();
+        }
+
+        //-------------------------------------------------------
+        //Анимация стакана при "забивании тетриса"
         this.blinkAnimation = function () {
             element.classList.add('blink-animation');
             setTimeout(() => {
                 element.classList.remove('blink-animation');
             }, 400);
         }
-
-        this.init();
-
-        // this.shakeAnimation = function ()  {
-        //     this.element.classList.add('shake-animation');
-        //     setTimeout(() => {
-        //         this.element.classList.remove('shake-animation');
-        //     }, 30);
-        // }
-
     }
 }

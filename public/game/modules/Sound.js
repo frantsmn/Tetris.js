@@ -19,10 +19,12 @@ export default class Sound {
                 this[sources[i]].src = `./game/sound/${sources[i]}.mp3`;
                 this[sources[i]].onload = this[sources[i]].onerror = onLoad;
             }
+
+            return func();
         }
 
         this.play = (name) => {
-            if (document.PLAY_SOUND) {
+            if (localStorage['SOUND'] === 'true') {
                 this[name].currentTime = 0;
                 this[name].play();
             }
@@ -30,8 +32,7 @@ export default class Sound {
 
         //Предзагрузка звуков
         this.preloadSounds(this.resources, () => {
-            console.log('All sound has been preloaded!');
-            // EMITTER.emit('sound:ready');
+            // console.log('All sound has been preloaded!');
         });
     }
 }

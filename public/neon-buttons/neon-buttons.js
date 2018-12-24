@@ -24,7 +24,8 @@ function neon(element) {
 
         element.classList.add('active');
         element.style.transition = `.3s ease-out transform`;
-        if (document.PLAY_SOUND) {
+
+        if (localStorage['SOUND'] === 'true') {
             fx.play();
         }
 
