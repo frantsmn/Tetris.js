@@ -25,6 +25,27 @@ export default class Stats {
             this.level = 0;
             this.refreshBlockImages();
             this.refresh()
+            this.blockStatistics = {
+                't-block': 0,
+                'j-block': 0,
+                'z-block': 0,
+                'o-block': 0,
+                's-block': 0,
+                'l-block': 0,
+                'i-block': 0,
+            }
+        }
+
+        //Обновление статистики (правая панель)
+        this.refresh = function () {
+            //Рекорд очков
+            element.querySelector(`#topScoreStat`).textContent = this.topScore;
+            //Набранные очки
+            element.querySelector(`#scoreStat`).textContent = this.score;
+            //Стертые линии
+            element.querySelector(`#linesStat`).textContent = this.lines;
+            //Текущий уровень
+            element.querySelector(`#levelStat`).textContent = this.level;
         }
 
         //=======================================================
@@ -101,9 +122,21 @@ export default class Stats {
         //=======================================================
         this.loadTopscores = function () {
             this.topScores = JSON.parse(localStorage.getItem('topScores'));
+            let sortedTopScores = [];
             if (this.topScores) {
-                let sortedTopScores = this.topScores.sort((a, b) => { return b.score - a.score })
+                sortedTopScores = this.topScores.sort((a, b) => { return b.score - a.score })
                 this.topScore = sortedTopScores[0].score;
+
+                //Отрисовка в таблице рекордов
+                let table = $('#scoresTable').html('');
+                sortedTopScores.forEach((item, i) => {
+                    console.log(i);
+                    if (i <= 9) {
+
+                        table.append(`<div>${item.name}</div>`).append(`<div>${item.score}</div>`);
+                    }
+                });
+
             } else {
                 console.log('Scores empty: ', this.topScores);
                 this.topScore = 0;
@@ -111,24 +144,12 @@ export default class Stats {
             this.refresh();
 
 
-            
-
 
             return this.topScores;
         }
 
+        this.loadTopscores();
 
-        //Обновление статистики (правая панель)
-        this.refresh = function () {
-            //Рекорд очков
-            element.querySelector(`#topScoreStat`).textContent = this.topScore;
-            //Набранные очки
-            element.querySelector(`#scoreStat`).textContent = this.score;
-            //Стертые линии
-            element.querySelector(`#linesStat`).textContent = this.lines;
-            //Текущий уровень
-            element.querySelector(`#levelStat`).textContent = this.level;
-        }
 
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
         //Обновить картинку следующего блока

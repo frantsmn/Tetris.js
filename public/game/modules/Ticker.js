@@ -5,24 +5,26 @@ export default class Ticker {
         this.actualLevel = 0;
         this.delay = [800, 717, 633, 550, 467, 383, 300, 217, 133, 100, 83, 83, 83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 17];
         this.intervalId = null;
-        let running = true;
+        let running = false;
 
         this.run = (level = this.actualLevel) => {
-            running = true;
-            console.log("running: ", running);
-            // console.log('...>', level);
-            this.intervalId = setInterval(() => {
+            if (!running) {
+                running = true;
+                console.log("running: ", running);
+                // console.log('...>', level);
+                this.intervalId = setInterval(() => {
 
-                if (running) {
-                    block.activeBlock.moveDown();
-                    console.log('.');
-                } else {
-                    requestAnimationFrame(() => {
-                        clearInterval(this.intervalId);
-                    });
-                }
+                    if (running) {
+                        block.activeBlock.moveDown();
+                        console.log('.');
+                    } else {
+                        requestAnimationFrame(() => {
+                            clearInterval(this.intervalId);
+                        });
+                    }
 
-            }, this.delay[level]);
+                }, this.delay[level]);
+            }
         }
 
         //Остановка тикера

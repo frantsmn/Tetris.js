@@ -14,15 +14,19 @@ function neon(element) {
     element.addEventListener('mouseleave', resetStyle);
     element.addEventListener('blur', resetStyle);
 
-    element.addEventListener('touchend', resetStyle);
+    element.addEventListener('touchstart', () => {
+        setTimeout(() => { element.blur(); }, 300);
+    });
 
     function start() {
         document.querySelectorAll(".neon").forEach((element) => {
-            element.classList.remove('active');
+            // element.classList.remove('active');
+
             element.blur();
         });
 
-        element.classList.add('active');
+        // element.classList.add('active');
+        element.focus();
         element.style.transition = `.3s ease-out transform`;
 
         if (localStorage['SOUND'] === 'true') {
@@ -50,7 +54,7 @@ function neon(element) {
 
     function resetStyle() {
         document.querySelectorAll(".neon").forEach((element) => {
-            element.classList.remove('active');
+            // element.classList.remove('active');
             element.blur();
         });
 

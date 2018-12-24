@@ -159,7 +159,8 @@
     box-shadow: inset 0 0 0 2px rgba(0, 255, 255, 0.32);
 }
 
-.neon.active, .neon:focus {
+/* .neon.active, */
+.neon:focus {
     outline: 0;
     background: #0e171d;
     color: rgba(0, 255, 255, 1);
@@ -179,7 +180,8 @@
     text-shadow: 0 0 2px rgba(0, 255, 0, 1);
 }
 
-.neon.toggler.active, .neon.toggler:focus {
+/* .neon.toggler.active, */
+.neon.toggler:focus {
     background: #0e1d0f;
     color: rgba(0, 255, 0, 1);
     border: 2px rgb(0, 40, 0) solid;

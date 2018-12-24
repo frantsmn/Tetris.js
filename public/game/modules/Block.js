@@ -3,7 +3,6 @@ export default class Block {
 
         this.queue = queue ? queue : [...new Array(1000)].map(() => Math.floor(Math.random() * 7) + 1);
         this.createRandomQueue = () => [...new Array(1000)].map(() => Math.floor(Math.random() * 7) + 1);
-        this.createNewQueue = () => this.queue = this.createRandomQueue();
 
         this.createBlock = {
             1: () => new I_block(),
@@ -23,6 +22,18 @@ export default class Block {
         stats.refreshAppearedBlocks(activeBlock.name);
         //Обновить в статистике следующий блок
         stats.refreshNextBlock(nextBlock.name);
+
+        //Создает новую очередь для новой игры
+        this.createNewQueue = () => {
+            this.queue = this.createRandomQueue();
+            this.activeBlockId = 0;
+            activeBlock = this.activeBlock = this.createBlock[this.queue[this.activeBlockId]]();
+            nextBlock = this.nextBlock = this.createBlock[this.queue[this.activeBlockId + 1]]();
+            //Обновить подсчет появившихся блоков в статистике
+            stats.refreshAppearedBlocks(activeBlock.name);
+            //Обновить в статистике следующий блок
+            stats.refreshNextBlock(nextBlock.name);
+        };
 
         let goToNextBlock = () => {
             activeBlock = this.activeBlock = this.nextBlock;

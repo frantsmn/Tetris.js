@@ -32,7 +32,7 @@ export default class Overlay {
             }
         });
 
-        // swiper.slideTo(2);
+        // swiper.slideTo(3);
 
         $('#StartBtn').click(function () {
             swiper.slideTo(0);
@@ -104,9 +104,17 @@ export default class Overlay {
                 swiper.slideTo(2, 0);
 
                 setTimeout(() => {
-                    $('#nameInput').focus();
-                }, 1300);
+                    $('#nameInput').focus().select();
+                }, 800);
             }, 1000);
         });
+        $('#nameInput').keypress(function (e) {
+            if (e.which == 13) {
+                $('#SaveScoreBtn').trigger('click');
+            }
+          });
+
+
+
     }
 }
