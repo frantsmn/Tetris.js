@@ -8,23 +8,24 @@ export default class Ticker {
         let running = false;
 
         this.run = (level = this.actualLevel) => {
-            if (!running) {
+            this.actualLevel = level;
+
+            // if (running === false) {
                 running = true;
-                console.log("running: ", running);
-                // console.log('...>', level);
+
                 this.intervalId = setInterval(() => {
 
                     if (running) {
                         block.activeBlock.moveDown();
-                        console.log('.');
+                        console.log(".\nrunning on speed: ", this.delay[this.actualLevel], running);
                     } else {
                         requestAnimationFrame(() => {
                             clearInterval(this.intervalId);
                         });
                     }
 
-                }, this.delay[level]);
-            }
+                }, this.delay[this.actualLevel]);
+            // }
         }
 
         //Остановка тикера

@@ -21,7 +21,6 @@ function neon(element) {
     function start() {
         document.querySelectorAll(".neon").forEach((element) => {
             // element.classList.remove('active');
-
             element.blur();
         });
 

@@ -23,6 +23,19 @@ export default class Block {
         //Обновить в статистике следующий блок
         stats.refreshNextBlock(nextBlock.name);
 
+        //Устанавливает заданную (сохраненую) очередь и позицию в ней
+        this.setQueue = (queue, i) => {
+            this.queue = queue;
+            this.activeBlockId = i;
+            activeBlock = this.activeBlock = this.createBlock[this.queue[this.activeBlockId]]();
+            nextBlock = this.nextBlock = this.createBlock[this.queue[this.activeBlockId + 1]]();
+            //Обновить подсчет появившихся блоков в статистике
+            //(не добавляя текущий, т.к. он был учтен) при сохранении
+            stats.refreshAppearedBlocks();
+            //Обновить в статистике картинку следующего блока
+            stats.refreshNextBlock(nextBlock.name);
+        }
+
         //Создает новую очередь для новой игры
         this.createNewQueue = () => {
             this.queue = this.createRandomQueue();

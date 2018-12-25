@@ -44,8 +44,14 @@ export default class Overlay {
             game.startGame();
         });
 
-        $('#LoadGameBtn').click(function () {
+        $('#SaveGameBtn').click(function () {
+            game.saveGame();
+            $('#SaveGameBtn').text('Saved').delay(200).fadeOut(400);
+        });
 
+        $('#LoadGameBtn').click(function () {
+            hide();
+            game.loadGame();
         });
 
         $('#SaveScoreBtn').click(function () {
@@ -89,6 +95,7 @@ export default class Overlay {
 
         EMITTER.subscribe('ticker:pausePressed', () => {
             show();
+            $('#SaveGameBtn').fadeIn(1).text('Save game');
             swiper.slideTo(1, 0);
         });
 

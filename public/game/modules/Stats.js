@@ -17,7 +17,7 @@ export default class Stats {
         this.lines = 0;
         this.level = 0;
 
-
+        //ИНциализация (сброс) статистики, для старта новой игры
         this.init = () => {
             this.loadTopscores();
             this.score = 0;
@@ -162,7 +162,9 @@ export default class Stats {
         //Подсчет появившихся в стакане блоков
         //Вызывается из Block.js
         this.refreshAppearedBlocks = function (activeBlockName) {
-            this.blockStatistics[activeBlockName]++;
+            if (activeBlockName) {
+                this.blockStatistics[activeBlockName]++;
+            }
             for (var prop in this.blockStatistics) {
                 if (Object.prototype.hasOwnProperty.call(this.blockStatistics, prop)) {
                     element.querySelector(`#${prop}-stat`).textContent = this.blockStatistics[prop];
