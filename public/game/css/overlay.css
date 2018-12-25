@@ -19,6 +19,60 @@
     overflow: hidden;
 }
 
+/* LOADING SCREEN */
+
+@keyframes loading {
+    from {
+        filter: blur(10px);
+    }
+    to {
+        filter: blur(2px);
+    }
+}
+
+@keyframes loading_text {
+    0% {
+        content: 'loading';
+    }
+    25% {
+        content: 'loading.';
+    }
+    50%{
+        content: 'loading..';
+    }
+    75%{
+        content: 'loading...';
+    }
+}
+
+.overlay>div{
+    filter: blur(0px);
+    transition: filter 0.2s ease;
+}
+
+.overlay.loading>div {
+    animation: loading 4s forwards;
+}
+
+.overlay.loading button {
+    pointer-events: none;
+}
+
+.overlay.loading::after {
+    animation: loading_text 1s infinite;
+    content: 'loading';
+    font-size: 20px;
+    color: var(--cyan-3);
+    display: block;
+    position: absolute;
+    height: 20px;
+    width: 100%;
+    left: 5px;
+    bottom: 15px;
+}
+
+/* LOADING SCREEN END */
+
 .overlay>div>div {
     text-align: center;
     height: 100%;
@@ -62,14 +116,13 @@
     align-items: center;
 }
 
-
 /* === GameOver overlay === */
 
-#finalScore{
+#finalScore {
     color: var(--cyan);
 }
 
-#nameInput{
+#nameInput {
     height: 40px;
     /* font-size: 150%; */
     text-align: center;
@@ -83,11 +136,10 @@
     font-family: 'Press Start 2P';
     color: var(--cyan);
     outline: none;
-
     transition: all 0.2s ease;
 }
 
-#nameInput:focus{
+#nameInput:focus {
     box-shadow: 0 6px 12px -7px rgba(0, 255, 255, 0.4);
     border-bottom: solid 1px var(--cyan);
     border-right: solid 1px var(--cyan-2);

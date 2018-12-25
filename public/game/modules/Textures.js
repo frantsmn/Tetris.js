@@ -44,7 +44,7 @@ export default class Textures {
 
             this.level = 0;
 
-            // console.log('All pictures has been preloaded!');
+            console.log('All pictures has been preloaded!');
             EMITTER.emit('textures:ready');
         });
 

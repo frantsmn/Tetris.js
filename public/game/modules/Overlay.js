@@ -92,6 +92,9 @@ export default class Overlay {
         });
 
 
+        EMITTER.subscribe('textures:ready', () => {
+            $('section.overlay').removeClass('loading');
+        });
 
         EMITTER.subscribe('ticker:pausePressed', () => {
             show();

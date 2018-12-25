@@ -54,7 +54,6 @@ class Game {
 
             control.controlAvailable = true;
 
-            // ticker.sleep(300);
             ticker.run(0);
         }
 
@@ -112,9 +111,7 @@ class Game {
 
             console.log('level: ');
         }
-
     }
-
 }
 
-const game = new Game();
+    let game = new Game()
