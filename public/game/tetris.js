@@ -54,7 +54,10 @@ class Game {
 
             control.controlAvailable = true;
 
-            ticker.run(0);
+            //Запуск тикера
+            ticker.actualLevel = 0;
+            //Даем задержку на подготовку игрока
+            ticker.sleep(400);
         }
 
         this.pauseGame = () => {
