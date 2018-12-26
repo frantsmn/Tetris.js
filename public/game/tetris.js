@@ -6,7 +6,8 @@
 // Textures (V)
 // Canvas   (V)
 // Stats    (V)
-// Overlay  (V)
+
+// Overlay  (V/С)
 
 // Control  (C)
 
@@ -21,7 +22,6 @@ import Ticker from './modules/Ticker.js';
 import Overlay from './modules/Overlay.js';
 
 //=======================================================
-
 
 class Game {
     constructor() {
@@ -98,7 +98,11 @@ class Game {
             canvas.drawState(matrix.getFixedMatrix());
 
             //Восстановление последовательности блоков
-            block.setQueue(state.block.queue, --state.block.activeBlockId);
+            if (state.block.activeBlockId - 1 > 0) {
+                block.setQueue(state.block.queue, --state.block.activeBlockId);
+            } else {
+                block.setQueue(state.block.queue, state.block.activeBlockId);
+            }
             block.activeBlock.drawBlock();
 
             //Сделать активными контролы
@@ -114,4 +118,4 @@ class Game {
     }
 }
 
-    let game = new Game()
+let game = new Game()

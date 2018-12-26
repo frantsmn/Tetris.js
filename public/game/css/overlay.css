@@ -37,15 +37,15 @@
     25% {
         content: 'loading.';
     }
-    50%{
+    50% {
         content: 'loading..';
     }
-    75%{
+    75% {
         content: 'loading...';
     }
 }
 
-.overlay>div{
+.overlay>div {
     filter: blur(0px);
     transition: filter 0.2s ease;
 }
@@ -114,6 +114,10 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
+}
+
+.overlay-scores .grid-container div{
+    padding: 5px;
 }
 
 /* === GameOver overlay === */

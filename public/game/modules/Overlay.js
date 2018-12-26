@@ -10,7 +10,6 @@
 // id="SaveScoreBtn"
 // id="LoadSaveBtn"
 
-
 export default class Overlay {
 
     constructor(game, stats) {
@@ -47,12 +46,17 @@ export default class Overlay {
         $('#SaveGameBtn').click(function () {
             game.saveGame();
             $('#SaveGameBtn').text('Saved').delay(200).fadeOut(400);
+            $('#LoadGameBtn').removeClass('blocked');
         });
 
         $('#LoadGameBtn').click(function () {
             hide();
             game.loadGame();
         });
+        //Предустановка стилй кнопке загрузки игры в зависимости от наличия сохранения (по умолчанию кнопка неактивна)
+        if (localStorage['state']) {
+            $('#LoadGameBtn').removeClass('blocked');
+        }
 
         $('#SaveScoreBtn').click(function () {
             let topScores = [];
@@ -91,7 +95,7 @@ export default class Overlay {
             swiper.slideTo(6);
         });
 
-
+        //По готовности (загрузке) текстур, убрать класс .loading для overlay
         EMITTER.subscribe('textures:ready', () => {
             $('section.overlay').removeClass('loading');
         });
@@ -122,7 +126,7 @@ export default class Overlay {
             if (e.which == 13) {
                 $('#SaveScoreBtn').trigger('click');
             }
-          });
+        });
 
 
 

@@ -160,6 +160,7 @@
 }
 
 /* .neon.active, */
+
 .neon:focus {
     outline: 0;
     background: #0e171d;
@@ -181,10 +182,18 @@
 }
 
 /* .neon.toggler.active, */
+
 .neon.toggler:focus {
     background: #0e1d0f;
     color: rgba(0, 255, 0, 1);
     border: 2px rgb(0, 40, 0) solid;
     box-shadow: inset 0 0 2px 2px rgba(0, 255, 0, 1);
     animation: turning_on_toggler .2s steps(6, end), blinking_toggler 0.012s steps(3, end) .35s infinite;
+}
+
+.neon.blocked {
+    pointer-events: none;
+    opacity: 0.25;
+    color: rgba(255, 255, 255, 0.42);
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.42);
 }
