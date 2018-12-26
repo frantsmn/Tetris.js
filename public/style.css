@@ -22,6 +22,7 @@ body {
 	user-select: none;
 	width: min-content;
 	height: 100%;
+	background: black;
 	/* min-height: 100vh; */
 	/*???*/
 	color: #fff;
