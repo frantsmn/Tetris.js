@@ -42,7 +42,7 @@ body {
 	width: 200%;
 	height: 200%;
 	background: rgb(50, 50, 50) url('./background.png');
-	background-size: cover;
+	background-size: 50%;
 	filter: blur(10px);
 	animation: scroll 300s linear infinite;
 	transform: translateZ(0);
