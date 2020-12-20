@@ -1,0 +1,157 @@
+.overlay a {
+    color: var(--color-cyan-05);
+}
+
+.overlay a:hover {
+    color: var(--color-cyan);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    border: 5px solid var(--color-cyan-03);
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.95);
+    line-height: 200%;
+}
+
+/* LOADING SCREEN */
+
+@keyframes loading {
+    from {
+        filter: blur(10px);
+    }
+    to {
+        filter: blur(2px);
+    }
+}
+
+@keyframes loading_text {
+    0% {
+        content: "loading";
+    }
+    25% {
+        content: "loading.";
+    }
+    50% {
+        content: "loading..";
+    }
+    75% {
+        content: "loading...";
+    }
+}
+
+.overlay > div {
+    transition: filter 0.2s ease;
+
+    filter: blur(0px);
+}
+
+.overlay.loading > div {
+    animation: loading 4s forwards;
+}
+
+.overlay.loading button {
+    pointer-events: none;
+}
+
+.overlay.loading::after {
+    position: absolute;
+    bottom: 15px;
+    left: 5px;
+    display: block;
+    width: 100%;
+    height: 20px;
+    content: "loading";
+    animation: loading_text 1s infinite;
+    color: var(--color-cyan-03);
+    font-size: 20px;
+}
+
+/* LOADING SCREEN END */
+
+.overlay > div > div {
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.overlay > div .content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+}
+
+.overlay > div .content button {
+    width: 60%;
+    margin-bottom: 20px;
+    padding: 25px 5px;
+    line-height: 150%;
+}
+
+/* PLAYER => Glass */
+
+.panel.glass .player-overlay button {
+    flex-shrink: 0;
+}
+
+/* === Highscores === */
+
+.overlay-scores .grid-container {
+    display: grid;
+    align-items: center;
+    height: fit-content;
+    color: white;
+
+    grid-template-columns: 1fr 1fr;
+}
+
+.overlay-scores .grid-container div {
+    padding: 5px;
+}
+
+/* === GameOver overlay === */
+
+#finalScore {
+    color: var(--color-cyan);
+}
+
+#nameInput {
+    height: 40px;
+    transition: all 0.2s ease;
+
+    /* font-size: 150%; */
+    text-align: center;
+    color: var(--color-cyan);
+    border: none;
+    border-top: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: solid 1px var(--color-cyan-03);
+    border-left: 1px solid transparent;
+    outline: none;
+    background: transparent;
+    font-family: "Press Start 2P";
+
+    caret-color: var(--color-cyan-03);
+}
+
+#nameInput:focus {
+    border-top: solid 1px var(--color-cyan-03);
+    border-right: solid 1px var(--coor-cyan-2);
+    border-bottom: solid 1px var(--coor-cyan-1);
+    border-left: solid 1px var(--coor-cyan-2);
+    background: rgba(0, 36, 45, 0.598);
+    box-shadow: 0 6px 12px -7px rgba(0, 255, 255, 0.4);
+}

@@ -1,0 +1,185 @@
+/* Panel */
+
+.panel {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    box-sizing: border-box;
+    width: 160px;
+    height: 500px;
+    margin: 4px;
+    padding: 5px;
+    text-align: center;
+    border: 5px solid var(--color-cyan-03);
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 0 2px black;
+}
+
+/* Panel . Stats */
+
+.panel.stats div {
+    display: flex;
+    align-content: flex-start;
+    justify-content: space-between;
+    margin: 0 5px;
+}
+
+.panel.stats div:last-child {
+    margin-bottom: 10px;
+}
+
+/* Panel . Glass */
+
+.panel.glass {
+    position: relative;
+    width: 250px;
+    max-width: 250px;
+    height: 500px;
+    max-height: 500px;
+    padding: 2px;
+}
+
+/* Panel (Mobile) — SINGLE */
+
+@media (max-width: 1000px) {
+    .panel.stats {
+        display: none;
+    }
+    .panel {
+        width: 40vw;
+        height: calc(60vw * 2);
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .panel.glass {
+        width: 60vw;
+        height: calc(60vw * 2);
+    }
+}
+
+@media (max-height: 580px) and (orientation: landscape) {
+    .player {
+        flex-direction: row-reverse;
+    }
+    .panel.stats {
+        display: none;
+    }
+    .panel {
+        width: calc(95vh / 3);
+        height: 95vh;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .panel.glass {
+        width: calc(95vh / 2);
+        height: 95vh;
+    }
+}
+
+/* Panel (Mobile) — COMPETITIVE */
+
+
+.panel .title {
+    margin: 10px 0;
+}
+
+/* Panel => img-wrap */
+
+.panel .img-wrap {
+    min-height: 44px;
+}
+
+.panel .img-wrap img[src="#"] {
+    visibility: hidden;
+}
+
+/* Panel => img-wrap => block-image */
+
+.panel .block-image {
+    max-width: 48px;
+    max-height: 32px;
+}
+
+.panel .block-image[src*="i-block"] {
+    max-width: 64px;
+    max-height: 16px;
+}
+
+/* Panel => Tetris animation for panel */
+
+@keyframes blink-animation {
+    0% {
+        border: 5px solid var(--color-cyan);
+        background-color: rgba(255, 255, 255, 0.1);
+
+        filter: brightness(1.5);
+    }
+    100% {
+        border: 5px solid var(--color-cyan-03);
+    }
+}
+
+.blink-animation .panel {
+    animation: blink-animation 0.0142s steps(2, end) infinite;
+}
+
+/*COMPETITITVE - adaptive content*/
+
+@media (max-width: 1000px) {
+    .game.competitive .panel {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 800px) {
+    .game.competitive .panel {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 600px) {
+    .game.competitive .panel {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 500px) {
+    .game.competitive .panel {
+        font-size: 11px;
+    }
+    /* Panel => img-wrap => block-image */
+    .game.competitive .panel .block-image {
+        max-width: 40px;
+        max-height: 24px;
+    }
+    .game.competitive .panel .block-image[src*="i-block"] {
+        max-width: 56px;
+        max-height: 10px;
+    }
+    .game.competitive .panel .title {
+        margin: 6px 0;
+    }
+}
+
+@media (max-width: 380px) {
+    .game.competitive .panel {
+        font-size: 8px;
+    }
+    /* Panel => img-wrap => block-image */
+    .game.competitive .panel .block-image {
+        max-width: 36px;
+        max-height: 20px;
+    }
+    .game.competitive .panel .block-image[src*="i-block"] {
+        max-width: 52px;
+        max-height: 4px;
+    }
+    .game.competitive .panel .title {
+        margin: 4px 0;
+    }
+}
+
+/* Panel end */

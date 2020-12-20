@@ -1,0 +1,17 @@
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-self:end;
+}
+
+.header {
+    &__left,
+    &__right {
+        display: flex;
+    }
+}
+
+.header button {
+    margin: 0 2px 3px;
+}

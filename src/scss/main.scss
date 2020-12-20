@@ -1,0 +1,92 @@
+*,
+::before,
+::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: "Press Start 2P", cursive;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    color: var(--color-white);
+    background-color: var(--color-black);
+    font-size: 14px;
+}
+
+.wrapper {
+    min-height: 100vh;
+    display: grid;
+    padding: 10px;
+    grid-gap: 10px;
+    align-items: start;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    // background: url("../assets/img/background.png");
+    background-size: cover;
+    filter: blur(20px);
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+h2 {
+    font-size: 1.2em;
+}
+
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* ================================= */
+
+/* === MAIN === */
+
+.main {
+    position: relative;
+}
+
+/* === PLAYER & OPPONENT === */
+
+.players {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.player {
+    display: flex;
+    flex-flow: row nowrap;
+    flex-grow: 0;
+    box-sizing: border-box;
+}
+
+.panel.info div:last-child {
+    margin-bottom: 5px;
+}
+
+.panel.info div .img-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
