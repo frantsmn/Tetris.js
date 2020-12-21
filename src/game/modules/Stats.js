@@ -17,7 +17,7 @@ export default class Stats {
         this.lines = 0;
         this.level = 0;
 
-        //ИНциализация (сброс) статистики, для старта новой игры
+        //Инциализация (сброс) статистики, для старта новой игры
         this.init = () => {
             this.loadTopscores();
             this.score = 0;
@@ -85,7 +85,6 @@ export default class Stats {
             } else {
                 if (n === 4) {
                     // В случае тетриса
-                    this.blinkAnimation();
                     EMITTER.emit('stats:tetris', this.level);
                 } else {
                     //В случае одиночной (двойной или тройной)
@@ -127,7 +126,6 @@ export default class Stats {
                 table.innerHTML = '';
 
                 sortedTopScores.forEach((item, i) => {
-                    console.log(i);
                     if (i <= 9) {
                         table.innerHTML += `<div>${item.name}</div> <div>${item.score}</div>`
                     }
@@ -167,15 +165,6 @@ export default class Stats {
                 }
             }
             this.refreshBlockImages();
-        }
-
-        //-------------------------------------------------------
-        //Анимация стакана при "забивании тетриса"
-        this.blinkAnimation = function () {
-            element.classList.add('blink-animation');
-            setTimeout(() => {
-                element.classList.remove('blink-animation');
-            }, 400);
         }
     }
 }

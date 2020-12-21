@@ -13,7 +13,7 @@
 
 import Block from './modules/Block.js';
 import Canvas from './modules/Canvas.js';
-import Control from './modules/Control.js';
+import Controls from './modules/Controls/Controls.js';
 import Matrix from './modules/Matrix.js';
 import Sound from './modules/Sound.js';
 import Stats from './modules/Stats.js';
@@ -27,23 +27,25 @@ import './modules/Settings.js';
 
 class Game {
     constructor() {
-
         const textures = new Textures();
         const ticker = new Ticker();
         const matrix = new Matrix();
         const canvas = new Canvas(document.getElementById('canvas'), textures);
         const stats = new Stats(document.getElementById('game'));
         const block = new Block(matrix, canvas, stats); //Принимает Matrix, Canvas, Stats, и queue (последовательность блоков) arr[1..7*1000]
-        const control = new Control(document.getElementById('controller'), block, ticker);
+        const controls = new Controls(block);
 
         new Sound();
         new UI(this, stats);
 
         const LEVEL_DELAYS = [800, 717, 633, 550, 467, 383, 300, 217, 133, 100, 83, 83, 83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 17];
 
-        EMITTER.subscribe('stats:newLevel', (level) => {
-            ticker.start(LEVEL_DELAYS[level]);
-        });
+        EMITTER.subscribe('stats:newLevel', (level) => ticker.start(LEVEL_DELAYS[level]));
+        EMITTER.subscribe('block:gameOver', () => ticker.stop());
+        EMITTER.subscribe('block:blockFixed', () => ticker.sleep(60));
+        EMITTER.subscribe('canvas:wipeAnimationStart', () => ticker.sleep(360));
+        EMITTER.subscribe('control:pausePressed', () => ticker.stop());
+        EMITTER.subscribe('control:pauseReleased', () => ticker.start());
 
         this.startGame = () => {
             //Определяем цвет у текстур
@@ -56,16 +58,12 @@ class Game {
             block.createNewQueue();
             block.activeBlock.drawBlock();
 
-            control.controlAvailable = true;
+            controls.isAvailable = true;
 
             // Оживляем по тикеру
             ticker.onTick = () => block.activeBlock.moveDown();
             ticker.start(LEVEL_DELAYS[0]);
             ticker.sleep(400);
-        }
-
-        this.pauseGame = () => {
-            control.togglePause();
         }
 
         this.saveGame = () => {
@@ -113,7 +111,7 @@ class Game {
             block.activeBlock.drawBlock();
 
             //Сделать активными контролы
-            control.controlAvailable = true;
+            controls.isAvailable = true;
 
             // Оживляем по тикеру
             ticker.onTick = () => block.activeBlock.moveDown();

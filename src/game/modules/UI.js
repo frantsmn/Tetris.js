@@ -128,6 +128,10 @@ export default class UI {
             hide();
         });
 
+        EMITTER.subscribe('stats:tetris', () => {
+            this.tetrisAnimation();
+        });
+
         //Gameover screen
         EMITTER.subscribe('block:gameOver', () => {
             setTimeout(() => {
@@ -150,5 +154,13 @@ export default class UI {
                     saveScoreButton.click();
                 }
             });
+    }
+
+    tetrisAnimation() {
+        const element = document.querySelector('.player');
+        element.classList.add('blink-animation');
+        setTimeout(() => {
+            element.classList.remove('blink-animation');
+        }, 400);
     }
 }

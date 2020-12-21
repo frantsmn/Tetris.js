@@ -100,6 +100,7 @@ export default class Block {
                 if (matrix.checkPointsIsEmpty(this.position.x - 1, this.position.y, this.pointsSet[this.rotation.state - 1])) {
                     eraseBlock();
                     this.position.x--;
+                    // console.timeEnd('gamepadDelay');
                     drawBlock();
                     EMITTER.emit('block:moveLeft');
                 }
@@ -108,6 +109,7 @@ export default class Block {
                 if (matrix.checkPointsIsEmpty(this.position.x + 1, this.position.y, this.pointsSet[this.rotation.state - 1])) {
                     eraseBlock();
                     this.position.x++;
+                    // console.timeEnd('gamepadDelay');
                     drawBlock();
                     EMITTER.emit('block:moveRight');
                 }
@@ -117,6 +119,7 @@ export default class Block {
                 if (matrix.checkPointsIsEmpty(this.position.x, this.position.y, this.pointsSet[newState - 1])) {
                     eraseBlock();
                     this.rotation.state = newState;
+                    // console.timeEnd('gamepadDelay');
                     drawBlock();
                     EMITTER.emit('block:rotateRight');
                 }
@@ -126,17 +129,20 @@ export default class Block {
                 if (matrix.checkPointsIsEmpty(this.position.x, this.position.y, this.pointsSet[newState - 1])) {
                     eraseBlock();
                     this.rotation.state = newState;
+                    // console.timeEnd('gamepadDelay');
                     drawBlock();
                     EMITTER.emit('block:rotateLeft');
                 }
             }
             let drawBlock = this.drawBlock = () => {
                 matrix.addPoints(this.position.x, this.position.y, this.pointsSet[this.rotation.state - 1], this.color);
-                canvas.drawBlock(this.position.x, this.position.y, this.pointsSet[this.rotation.state - 1], this.color);
+                canvas.drawState(matrix.getMatrix());
+                // canvas.drawBlock(this.position.x, this.position.y, this.pointsSet[this.rotation.state - 1], this.color);
             }
             let eraseBlock = () => {
                 matrix.removePoints(this.position.x, this.position.y, this.pointsSet[this.rotation.state - 1]);
-                canvas.eraseBlock(this.position.x, this.position.y, this.pointsSet[this.rotation.state - 1]);
+                // canvas.drawState(matrix.getMatrix());
+                // canvas.eraseBlock(this.position.x, this.position.y, this.pointsSet[this.rotation.state - 1]);
             }
         }
 

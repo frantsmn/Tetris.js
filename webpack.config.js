@@ -1,8 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-const CopyPlugin = require("copy-webpack-plugin");
-// const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
 	entry: __dirname + '/src/index.js',
@@ -10,7 +8,10 @@ module.exports = {
 		filename: '[name].js',
 		path: __dirname + '/dist'
 	},
-	cache: true, watch: true,
+
+	cache: true,
+	watch: true,
+	devtool: 'source-map',
 
 	module: {
 		rules: [
@@ -39,14 +40,11 @@ module.exports = {
 			chunkFilename: "[id].css"
 		}),
 		new HtmlWebpackPlugin({
-			// title: 'Custom template',
-			// Load a custom template (lodash by default)
 			template: __dirname + '/src/index.html'
 		}),
 		new CopyPlugin({
 			patterns: [
 				{ from: "src/assets", to: "assets" },
-				// { from: "src/index.html", to: "index.html" },
 				{ from: "src/favicon.ico", to: "favicon.ico" },
 			],
 		}),
