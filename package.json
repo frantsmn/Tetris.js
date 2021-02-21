@@ -25,15 +25,15 @@
   "homepage": "https://github.com/frantsmn/Tetris.js#readme",
   "devDependencies": {
     "copy-webpack-plugin": "^7.0.0",
-    "css-loader": "^5.0.1",
+    "css-loader": "^5.0.2",
     "html-loader": "^1.3.2",
-    "html-webpack-plugin": "^4.5.0",
-    "mini-css-extract-plugin": "^1.3.3",
-    "sass": "^1.30.0",
-    "sass-loader": "^10.1.0",
-    "webpack": "^5.11.0",
-    "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+    "html-webpack-plugin": "^4.5.2",
+    "mini-css-extract-plugin": "^1.3.8",
+    "sass": "^1.32.8",
+    "sass-loader": "^10.1.1",
+    "webpack": "^5.23.0",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
     "gamepad.js": "^1.0.3"

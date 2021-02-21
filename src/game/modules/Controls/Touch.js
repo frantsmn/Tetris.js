@@ -21,9 +21,6 @@ export default class Touch {
 			button.addEventListener('touchstart', e => this.keydown(e));
 			button.addEventListener('touchend', e => this.keyup(e));
 		});
-
-		//Применить стили для отпущенной тач-кнопки
-		// e.srcElement.classList.remove('active');
 	}
 
 	keydown(e) {

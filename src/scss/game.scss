@@ -1,0 +1,222 @@
+@keyframes tetris-animation {
+    0% {
+        border: 5px solid var(--color-cyan);
+        background-color: rgba(255, 255, 255, 0.1);
+
+        filter: brightness(1.5);
+    }
+    100% {
+        border: 5px solid var(--color-cyan-03);
+    }
+}
+
+.game-container {
+    display: grid;
+    justify-content: center;
+
+    grid-template-columns: auto auto;
+    grid-gap: 10px;
+
+    .game {
+        display: grid;
+
+        grid-template-columns: minmax(130px, 170px) 250px minmax(110px, 150px);
+        grid-template-rows: 1fr 80px;
+        grid-gap: 10px;
+        grid-template-areas:
+            "stats glass info"
+            "status status status";
+
+        &:not(:first-child) {
+            display: none;
+        }
+
+        // Прятать .panel stats на маленьком экране
+        @media (max-width: 580px) {
+            grid-template-columns: 250px minmax(110px, 150px);
+            grid-template-areas:
+                "glass info"
+                "status status";
+        }
+    }
+
+    .panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 5px;
+        border: 5px solid var(--color-cyan-03);
+        border-radius: 2px;
+        background: rgba(0, 0, 0, 0.8);
+        box-shadow: 0 0 0 2px black;
+
+        @media (max-width: 1000px) {
+            font-size: 14px;
+        }
+
+        @media (max-width: 800px) {
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            font-size: 12px;
+        }
+
+        @media (max-width: 500px) {
+            font-size: 11px;
+        }
+
+        /* #1 Stats */
+        &_stats {
+            text-align: center;
+
+            grid-area: stats;
+
+            @media (max-width: 580px) {
+                display: none;
+            }
+        }
+
+        &__stats-row {
+            display: flex;
+            align-content: flex-start;
+            justify-content: space-between;
+            margin: 0 5px;
+
+            &:last-child {
+                margin-bottom: 10px;
+            }
+        }
+
+        &__block-image {
+            max-width: 48px;
+            max-height: 32px;
+
+            &[src*="i-block"] {
+                max-width: 64px;
+                max-height: 16px;
+            }
+        }
+
+        /* #2 Glass */
+        &_glass {
+            width: 250px;
+            height: 500px;
+            max-height: 100%;
+            padding: 2px;
+
+            grid-area: glass;
+        }
+
+        /* #3 Info */
+        &_info {
+            text-align: center;
+
+            grid-area: info;
+        }
+
+        &__img-wrap {
+            min-height: 44px;
+        }
+
+        /* #4 Info */
+        &_status {
+            grid-area: status;
+        }
+
+        &.blink-animation {
+            animation: tetris-animation 0.0142s steps(2, end) infinite;
+        }
+    }
+}
+
+/**
+ *   PVP MODE
+**/
+
+.game-container {
+    &.pvp-mode {
+        justify-content: space-between !important;
+
+        .game {
+            &:not(:first-child) {
+                display: grid;
+            }
+
+            @media (max-width: 1200px) {
+                grid-template-columns: 250px minmax(110px, 150px);
+                grid-template-areas:
+                    "glass info"
+                    "status status";
+            }
+        }
+
+        .panel {
+            &_stats {
+                @media (max-width: 1200px) {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+/* Panel (Mobile) — SINGLE */
+
+// @media (max-height: 580px) and (orientation: landscape) {
+//     .player {
+//         flex-direction: row-reverse;
+//     }
+//     .panel.stats {
+//         display: none;
+//     }
+//     .panel {
+//         width: calc(95vh / 3);
+//         height: 95vh;
+//         margin: 0;
+//         border-radius: 0;
+//         box-shadow: none;
+//     }
+//     .panel.glass {
+//         width: calc(95vh / 2);
+//         height: 95vh;
+//     }
+// }
+
+/*COMPETITITVE - adaptive content*/
+
+// @media (max-width: 500px) {
+//     .game.competitive .panel {
+//         font-size: 11px;
+//     }
+//     /* Panel => img-wrap => block-image */
+//     .game.competitive .panel .block-image {
+//         max-width: 40px;
+//         max-height: 24px;
+//     }
+//     .game.competitive .panel .block-image[src*="i-block"] {
+//         max-width: 56px;
+//         max-height: 10px;
+//     }
+//     .game.competitive .panel .title {
+//         margin: 6px 0;
+//     }
+// }
+
+// @media (max-width: 380px) {
+//     .game.competitive .panel {
+//         font-size: 8px;
+//     }
+//     /* Panel => img-wrap => block-image */
+//     .game.competitive .panel .block-image {
+//         max-width: 36px;
+//         max-height: 20px;
+//     }
+//     .game.competitive .panel .block-image[src*="i-block"] {
+//         max-width: 52px;
+//         max-height: 4px;
+//     }
+//     .game.competitive .panel .title {
+//         margin: 4px 0;
+//     }
+// }

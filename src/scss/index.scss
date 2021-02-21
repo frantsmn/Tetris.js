@@ -1,7 +1,54 @@
 @import "variables";
-@import "main";
+
 @import "button";
+
 @import "header";
-@import "panel";
+@import "main";
+@import "footer";
+
+@import "game";
+
 @import "overlay";
 @import "controller";
+
+*,
+::before,
+::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: "Press Start 2P", cursive;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: var(--color-white);
+    background-color: var(--color-black);
+    font-size: 14px;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    // background: url("../assets/img/background.png");
+    // background-size: cover;
+    // filter: blur(20px);
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+h2 {
+    font-size: 1.2em;
+}
+
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+}

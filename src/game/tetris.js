@@ -26,12 +26,12 @@ import './modules/Settings.js';
 // const matrixState = '[[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,{"state":"fixed","color":3},null,null,null,null,null,null],[null,null,{"state":"fixed","color":3},{"state":"fixed","color":3},null,null,null,null,null,null],[null,null,{"state":"fixed","color":3},{"state":"fixed","color":3},null,null,null,null,null,null],[null,{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},null,{"state":"fixed","color":3},{"state":"fixed","color":3},null,null,null],[null,{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},null,null,null],[null,{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":1},{"state":"fixed","color":1},{"state":"fixed","color":3},null,null,null],[{"state":"fixed","color":2},{"state":"fixed","color":1},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},null],[{"state":"fixed","color":2},{"state":"fixed","color":2},{"state":"fixed","color":2},null,{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3},{"state":"fixed","color":3}]]';
 
 class Game {
-    constructor() {
+    constructor({ canvasElement, statsElement }) {
         const textures = new Textures();
         const ticker = new Ticker();
         const matrix = new Matrix();
-        const canvas = new Canvas(document.getElementById('canvas'), textures);
-        const stats = new Stats(document.getElementById('game'));
+        const canvas = new Canvas(canvasElement, textures);
+        const stats = new Stats(statsElement);
         const block = new Block(matrix, canvas, stats); //Принимает Matrix, Canvas, Stats, и queue (последовательность блоков) arr[1..7*1000]
         const controls = new Controls(block);
 
@@ -84,7 +84,6 @@ class Game {
 
         this.loadGame = () => {
             const state = JSON.parse(localStorage.getItem('state'));
-            console.log(state);
 
             //Сбросить статистику и присвоить значения из state
             stats.init();
@@ -121,4 +120,12 @@ class Game {
     }
 }
 
-new Game();
+new Game({
+    canvasElement: document.getElementById('canvas1'),
+    statsElement: document.getElementById('game1')
+});
+
+new Game({
+    canvasElement: document.getElementById('canvas2'),
+    statsElement: document.getElementById('game2')
+});

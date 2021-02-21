@@ -4,25 +4,6 @@ export default class Sound {
         //Cписок ресурсов
         this.resources = ['land', 'move', 'rotate', 'clearline', 'tetris', 'gameover', 'levelup', 'pause', 'option'];
 
-        this.preloadSounds = (sources, func) => {
-            let counter = 0;
-
-            function onLoad() {
-                counter++;
-                if (counter === sources.length) {
-                    func();
-                }
-            }
-
-            for (let i = 0; i < sources.length; i++) {
-                this[sources[i]] = new Audio();
-                this[sources[i]].src = `./assets/game/sound/${sources[i]}.mp3`;
-                this[sources[i]].onload = this[sources[i]].onerror = onLoad;
-            }
-
-            return func();
-        }
-
         this.play = (name) => {
             if (localStorage['SOUND'] === 'true') {
                 this[name].currentTime = 0;
@@ -83,5 +64,24 @@ export default class Sound {
         EMITTER.subscribe('block:moveRight', () => {
             this.play('move');
         });
+    }
+
+    preloadSounds(sources, callback) {
+        let counter = 0;
+
+        function onLoad() {
+            counter++;
+            if (counter === sources.length) {
+                callback();
+            }
+        }
+
+        for (let i = 0; i < sources.length; i++) {
+            this[sources[i]] = new Audio();
+            this[sources[i]].src = `./assets/game/sound/${sources[i]}.mp3`;
+            this[sources[i]].onload = this[sources[i]].onerror = onLoad;
+        }
+
+        return callback();
     }
 }

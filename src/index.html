@@ -15,151 +15,182 @@
     <body>
         <div class="background"></div>
 
-        <div class="wrapper">
+        <header class="header">
+            <div class="header__left">
+                <button id="StartBtn" class="btn" title="Start screen">Game</button>
+                <button id="ScoresBtn" class="btn" title="Top scores">Scores</button>
+                <button id="AboutBtn" class="btn" title="Author">About</button>
+                <button id="HelpBtn" class="btn" title="Help">?</button>
+            </div>
 
-            <header class="header container">
-                <div class="header__left">
-                    <button id="StartBtn" class="btn" title="Start screen">Game</button>
-                    <button id="ScoresBtn" class="btn" title="Top scores">Scores</button>
-                    <button id="AboutBtn" class="btn" title="Author">About</button>
-                    <button id="HelpBtn" class="btn" title="Help">?</button>
+            <div class="header__right">
+                <button id="ControllerToggler" class="btn btn_green" title="Mobile controller">+ oo</button>
+                <button id="SoundToggler" class="btn btn_green" title="Sound">{&#060;</button>
+                <button id="FullScreenToggler" class="btn btn_green" title="Fullscreen">[]</button>
+            </div>
+        </header>
+
+        <main class="main">
+
+            <div class="game-container pvp-mode">
+
+                <div id="game1" class="game">
+
+                    <div class="panel panel_stats">
+                        <p>
+                            stats
+                        </p>
+                        <div class="panel__stats-row">
+                            <img data-blockName="t-block" class="panel__block-image">
+                            <span id="t-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="j-block" class="panel__block-image">
+                            <span id="j-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="z-block" class="panel__block-image">
+                            <span id="z-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="o-block" class="panel__block-image">
+                            <span id="o-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="s-block" class="panel__block-image">
+                            <span id="s-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="l-block" class="panel__block-image">
+                            <span id="l-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="i-block" class="panel__block-image">
+                            <span id="i-block-stat">0</span>
+                        </div>
+                    </div>
+
+                    <div class="panel panel_glass">
+                        <canvas id="canvas1" width="200" height="400"></canvas>
+                    </div>
+
+                    <div class="panel panel_info">
+                        <div>
+                            <p>
+                                top
+                            </p>
+                            <span id="topScoreStat">0</span>
+                        </div>
+                        <div>
+                            <p>
+                                score
+                            </p>
+                            <span id="scoreStat">0</span>
+                        </div>
+                        <div>
+                            <p>
+                                next
+                            </p>
+                            <div class="panel__img-wrap"><img id="nextBlock" class="panel__block-image" src="#"></div>
+                        </div>
+                        <div>
+                            <p>
+                                lines
+                            </p>
+                            <span id="linesStat">0</span>
+                        </div>
+                        <div>
+                            <p>
+                                level
+                            </p>
+                            <span id="levelStat">0</span>
+                        </div>
+                    </div>
+
+                    <div class="panel panel_status">
+                        status
+                    </div>
+
                 </div>
 
-                <div class="header__right">
-                    <button id="ControllerToggler" class="btn btn_green" title="Mobile controller">+ oo</button>
-                    <button id="SoundToggler" class="btn btn_green" title="Sound">{&#060;</button>
-                    <button id="FullScreenToggler" class="btn btn_green" title="Fullscreen">[]</button>
+                <div id="game2" class="game">
+
+                    <div class="panel panel_stats">
+                        <p>
+                            stats
+                        </p>
+                        <div class="panel__stats-row">
+                            <img data-blockName="t-block" class="panel__block-image">
+                            <span id="t-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="j-block" class="panel__block-image">
+                            <span id="j-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="z-block" class="panel__block-image">
+                            <span id="z-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="o-block" class="panel__block-image">
+                            <span id="o-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="s-block" class="panel__block-image">
+                            <span id="s-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="l-block" class="panel__block-image">
+                            <span id="l-block-stat">0</span>
+                        </div>
+                        <div class="panel__stats-row">
+                            <img data-blockName="i-block" class="panel__block-image">
+                            <span id="i-block-stat">0</span>
+                        </div>
+                    </div>
+
+                    <div class="panel panel_glass">
+                        <canvas id="canvas2" width="200" height="400"></canvas>
+                    </div>
+
+                    <div class="panel panel_info">
+                        <div>
+                            <p>
+                                top
+                            </p>
+                            <span id="topScoreStat">0</span>
+                        </div>
+                        <div>
+                            <p>
+                                score
+                            </p>
+                            <span id="scoreStat">0</span>
+                        </div>
+                        <div>
+                            <p>
+                                next
+                            </p>
+                            <div class="panel__img-wrap"><img id="nextBlock" class="panel__block-image" src="#"></div>
+                        </div>
+                        <div>
+                            <p>
+                                lines
+                            </p>
+                            <span id="linesStat">0</span>
+                        </div>
+                        <div>
+                            <p>
+                                level
+                            </p>
+                            <span id="levelStat">0</span>
+                        </div>
+                    </div>
+
+                    <div class="panel panel_status">
+                        status
+                    </div>
+
                 </div>
-            </header>
-
-            <main id="game" class="main container">
-
-                <section class="players">
-
-                    <section class="player">
-
-                        <div class="panel stats">
-                            <p class="title">
-                                stats
-                            </p>
-                            <div><img data-blockName="t-block" class="block-image"><span id="t-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="j-block" class="block-image"><span id="j-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="z-block" class="block-image"><span id="z-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="o-block" class="block-image"><span id="o-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="s-block" class="block-image"><span id="s-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="l-block" class="block-image"><span id="l-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="i-block" class="block-image"><span id="i-block-stat">0</span>
-                            </div>
-                        </div>
-
-                        <div class="panel glass">
-                            <canvas id="canvas" width="200" height="400"></canvas>
-                        </div>
-
-                        <div class="panel info">
-                            <div class="top-score">
-                                <p class="title">
-                                    top
-                                </p>
-                                <span id="topScoreStat">0</span>
-                            </div>
-                            <div>
-                                <p class="title">
-                                    score
-                                </p>
-                                <span id="scoreStat">0</span>
-                            </div>
-                            <div>
-                                <p class="title">
-                                    next
-                                </p>
-                                <div class="img-wrap"><img id="nextBlock" class="block-image" src="#"></div>
-                            </div>
-                            <div>
-                                <p class="title">
-                                    lines
-                                </p>
-                                <span id="linesStat">0</span>
-                            </div>
-                            <div>
-                                <p class="title">
-                                    level
-                                </p>
-                                <span id="levelStat">0</span>
-                            </div>
-                        </div>
-
-                    </section>
-
-                    <section class="player">
-                        <div class="panel stats">
-                            <p class="title">
-                                stats
-                            </p>
-                            <div><img data-blockName="t-block" class="block-image"><span id="t-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="j-block" class="block-image"><span id="j-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="z-block" class="block-image"><span id="z-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="o-block" class="block-image"><span id="o-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="s-block" class="block-image"><span id="s-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="l-block" class="block-image"><span id="l-block-stat">0</span>
-                            </div>
-                            <div><img data-blockName="i-block" class="block-image"><span id="i-block-stat">0</span>
-                            </div>
-                        </div>
-
-                        <div class="panel glass">
-                            <canvas width="200" height="400"></canvas>
-                            <div class="opponent-overlay">
-                            </div>
-                        </div>
-
-                        <div class="panel info">
-                            <div class="top-score">
-                                <p class="title">
-                                    top
-                                </p>
-                                <span id="topScoreStat">0</span>
-                            </div>
-                            <div>
-                                <p class="title">
-                                    score
-                                </p>
-                                <span id="scoreStat">0</span>
-                            </div>
-                            <div>
-                                <p class="title">
-                                    next
-                                </p>
-                                <div class="img-wrap"><img id="nextBlock" class="block-image" src="#"></div>
-                            </div>
-                            <div>
-                                <p class="title">
-                                    lines
-                                </p>
-                                <span id="linesStat">0</span>
-                            </div>
-                            <div>
-                                <p class="title">
-                                    level
-                                </p>
-                                <span id="levelStat">0</span>
-                            </div>
-                        </div>
-
-                    </section>
-
-                </section>
 
                 <section class="overlay swiper-container loading">
                     <div class="swiper-wrapper">
@@ -231,14 +262,15 @@
                     </div>
                 </section>
 
-            </main>
+            </div>
 
-            <footer class="footer container">
-                <div class="status-bar">
-                    <span class="status">Gamepad-1</span>
-                    <span class="status">Gamepad-2</span>
-                </div>
-            </footer>
+        </main>
+
+        <footer class="footer">
+            <div class="status-bar">
+                Footer
+            </div>
+        </footer>
 
         </div>
 

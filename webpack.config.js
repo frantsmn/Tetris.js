@@ -9,9 +9,9 @@ module.exports = {
 		path: __dirname + '/dist'
 	},
 
-	cache: true,
 	watch: true,
-	devtool: 'source-map',
+	mode: 'development',
+	devtool: false,
 
 	module: {
 		rules: [
@@ -27,7 +27,7 @@ module.exports = {
 				test: /\.s?css$/,
 				use: [
 					MiniCssExtractPlugin.loader,
-					{ loader: 'css-loader', options: { url: false, sourceMap: true } },
+					{ loader: 'css-loader', options: { url: false, sourceMap: false } },
 					"sass-loader"
 				]
 			}
@@ -53,7 +53,6 @@ module.exports = {
 	devServer: {
 		contentBase: __dirname + '/dist',
 		open: true,
-		compress: true,
 		port: 8080,
 		hot: true
 	}
